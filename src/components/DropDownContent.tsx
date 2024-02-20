@@ -20,7 +20,7 @@ const TextColorChange = styled(Text)`
 `;
 
 const ContentTitle = styled.h1`
-  color: #7fc7e3;
+  color: #c2dee9;
   font-size: 2rem;
   margin-bottom: 1rem;
 `;
@@ -40,7 +40,7 @@ function DropDownContent() {
         </Text>
       </div>
       <div>
-        <TextColorChange>gotenborg.</TextColorChange>
+        <TextColorChange>goteborg.</TextColorChange>
       </div>
     </ContentContainer>
   );
