@@ -8,8 +8,15 @@ const FlexBetween = styled.div`
 `;
 
 const Title = styled.h1`
+  color: #c2dee9;
+  font-weight: 700;
+  font-size: 2rem;
+`;
+
+const SubTitle = styled.h1`
   color: #7fc7e3;
   font-weight: 700;
+  font-size: 2rem;
 `;
 
 const Wrapper = styled.section`
@@ -21,9 +28,10 @@ function Header() {
   return (
     <Wrapper>
       <FlexBetween>
-        <Title>NYA resturanger GBG</Title>
+        <Title>nya resturanger</Title>
         <Menu />
       </FlexBetween>
+      <SubTitle>goteborg.</SubTitle>
     </Wrapper>
   );
 }
