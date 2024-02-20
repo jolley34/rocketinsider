@@ -20,7 +20,7 @@ const SubTitle = styled.h1`
 `;
 
 const Wrapper = styled.section`
-  padding: 4rem;
+  padding: 10rem;
   background: #1d1d1d;
 `;
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import DropDownContent from "../components/DropDownContent";
 
 interface MenuOpen {
   isOpen: boolean;
@@ -7,7 +8,7 @@ interface MenuOpen {
 
 const MenuBar = styled.button<MenuOpen>`
   svg {
-    fill: #deebf0;
+    fill: #c2dee9;
   }
   background: none;
   border: none;
@@ -18,8 +19,8 @@ const MenuBar = styled.button<MenuOpen>`
 const CloseButton = styled.button<MenuOpen>`
   background: none;
   border: none;
-  color: #deebf0;
-  font-size: 3rem;
+  color: #c2dee9;
+  font-size: 2rem;
   cursor: pointer;
   z-index: 1;
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
@@ -48,7 +49,9 @@ function Menu() {
       <CloseButton isOpen={isOpen} onClick={toggleDropDown}>
         ×
       </CloseButton>
-      <DropDown isOpen={isOpen}>{/* Your dropdown content here */}</DropDown>
+      <DropDown isOpen={isOpen}>
+        <DropDownContent />
+      </DropDown>
       <MenuBar isOpen={isOpen} onClick={toggleDropDown}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
