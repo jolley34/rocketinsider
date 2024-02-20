@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 const ContentContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  justify-content: space-between;
   padding: 10rem;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 `;
 
 const Text = styled.p`
@@ -13,6 +13,10 @@ const Text = styled.p`
   font-size: 1.5rem;
   color: #c2dee9;
   margin-bottom: 1rem;
+`;
+
+const TextColorChange = styled(Text)`
+  color: #7fc7e3;
 `;
 
 const ContentTitle = styled.h1`
@@ -24,15 +28,20 @@ const ContentTitle = styled.h1`
 function DropDownContent() {
   return (
     <ContentContainer>
-      <ContentTitle>Visionen</ContentTitle>
-      <Text>
-        Detta är platsen du ska vända dig till om du vill utforska kommande men
-        också nyöppnade resturanger i Göteborg.
-      </Text>
-      <Text>
-        Detta är för dig som vill vara först med att testa Göteborgs nyheter
-        matväg.
-      </Text>
+      <div>
+        <ContentTitle>Visionen</ContentTitle>
+        <Text>
+          Detta är platsen du ska vända dig till om du vill utforska kommande
+          men också nyöppnade resturanger i Göteborg.
+        </Text>
+        <Text>
+          Detta är för dig som vill vara först med att testa Göteborgs nyheter
+          matväg.
+        </Text>
+      </div>
+      <div>
+        <TextColorChange>gotenborg.</TextColorChange>
+      </div>
     </ContentContainer>
   );
 }
