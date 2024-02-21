@@ -28,7 +28,7 @@ const ListItemSub = styled(ListItem)`
   text-align: left;
   font-weight: 700;
   color: #7fc7e3;
-  font-size: 2rem;
+  font-size: 1.25rem;
 `;
 
 function Navbar() {
