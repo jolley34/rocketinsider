@@ -17,6 +17,8 @@ const ListItem = styled.li`
   color: #c2dee9;
   border-bottom: solid 3px #c2dee9;
   margin-top: 1rem;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
   cursor: pointer;
 `;
 
