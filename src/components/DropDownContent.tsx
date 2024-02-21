@@ -32,7 +32,7 @@ function DropDownContent() {
         <ContentTitle>The Vision</ContentTitle>
         <Text>
           Rather than displaying excessive data, this will provide only the top
-          3 largest INSIDE TRANSACTIONS from the US market today.
+          3 largest INSIDE TRANSACTIONS from the US market the last 24 Hours.
         </Text>
         <Text>
           This is by no means a financial recommendation to buy, sell, or trade

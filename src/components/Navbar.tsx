@@ -13,7 +13,7 @@ const NavbarContainer = styled.ul`
 
 const ListItem = styled.li`
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #c2dee9;
   border-bottom: solid 3px #c2dee9;
   margin-top: 1rem;
@@ -27,6 +27,7 @@ const ListItemSub = styled(ListItem)`
   margin-top: 0rem;
   text-align: left;
   color: #7fc7e3;
+  font-weight: 700;
 `;
 
 function Navbar() {
