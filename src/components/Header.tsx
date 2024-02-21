@@ -28,10 +28,10 @@ function Header() {
   return (
     <Wrapper>
       <FlexBetween>
-        <Title>nya resturanger</Title>
+        <Title>explore</Title>
         <Menu />
       </FlexBetween>
-      <SubTitle>goteborg.</SubTitle>
+      <SubTitle>rocketinsider.</SubTitle>
     </Wrapper>
   );
 }

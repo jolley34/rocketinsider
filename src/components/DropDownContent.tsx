@@ -29,18 +29,18 @@ function DropDownContent() {
   return (
     <ContentContainer>
       <div>
-        <ContentTitle>Visionen</ContentTitle>
+        <ContentTitle>The Vision</ContentTitle>
         <Text>
-          Detta är platsen du ska vända dig till om du vill utforska kommande
-          men också nyöppnade resturanger i Göteborg.
+          Rather than displaying excessive data, this will provide only the top
+          3 largest INSIDE TRANSACTIONS from the US market today.
         </Text>
         <Text>
-          Detta är för dig som vill vara först med att testa Göteborgs nyheter
-          matväg.
+          This is by no means a financial recommendation to buy, sell, or trade
+          the symbol displayed.
         </Text>
       </div>
       <div>
-        <TextColorChange>goteborg.</TextColorChange>
+        <TextColorChange>rocketinsider.</TextColorChange>
       </div>
     </ContentContainer>
   );
