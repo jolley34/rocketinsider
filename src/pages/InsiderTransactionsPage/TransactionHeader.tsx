@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Menu from "./Menu";
+import Menu from "../../components/Menu";
 
 const FlexBetween = styled.div`
   display: flex;
@@ -20,20 +21,24 @@ const SubTitle = styled.h1`
 `;
 
 const Wrapper = styled.section`
-  padding: 10rem;
+  padding: 4rem 5rem 4rem 5rem;
   background: #1d1d1d;
 `;
 
-function Header() {
+function TransactionHeader() {
   return (
     <Wrapper>
       <FlexBetween>
-        <Title>explore</Title>
+        <Link to="/">
+          <Title>explore</Title>
+        </Link>
         <Menu />
       </FlexBetween>
-      <SubTitle>rocketinsider.</SubTitle>
+      <Link to="/">
+        <SubTitle>rocketinsider.</SubTitle>
+      </Link>
     </Wrapper>
   );
 }
 
-export default Header;
+export default TransactionHeader;

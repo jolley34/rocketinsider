@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Flex = styled.div`
@@ -35,12 +36,16 @@ function Navbar() {
   return (
     <NavbarContainer>
       <Flex>
-        <ListItem>Largest purchase</ListItem>
-        <ListItemSub>Today</ListItemSub>
+        <Link to="largest/purchase">
+          <ListItem>Largest purchase</ListItem>
+          <ListItemSub>Today</ListItemSub>
+        </Link>
       </Flex>
       <Flex>
-        <ListItem>Largest sell</ListItem>
-        <ListItemSub>Today</ListItemSub>
+        <Link to="largest/sell">
+          <ListItem>Largest sell</ListItem>
+          <ListItemSub>Today</ListItemSub>
+        </Link>
       </Flex>
     </NavbarContainer>
   );

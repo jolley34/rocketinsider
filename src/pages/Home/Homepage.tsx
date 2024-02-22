@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Header from "./components/Header";
-import Navbar from "./components/Navbar";
+import Header from "./Header";
+import Navbar from "./Navbar";
 
 const Root = styled.div`
   width: 100vw;
@@ -13,7 +13,7 @@ const Flex = styled.section`
   flex-direction: column;
 `;
 
-function App() {
+function Homepage() {
   return (
     <Root>
       <Flex>
@@ -24,4 +24,4 @@ function App() {
   );
 }
 
-export default App;
+export default Homepage;
