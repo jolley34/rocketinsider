@@ -36,15 +36,15 @@ function Navbar() {
   return (
     <NavbarContainer>
       <Flex>
-        <Link to="largest/purchase">
+        <Link to="transactions">
           <ListItem>Largest purchase</ListItem>
-          <ListItemSub>Today</ListItemSub>
+          <ListItemSub>The last 24 hours</ListItemSub>
         </Link>
       </Flex>
       <Flex>
-        <Link to="largest/sell">
+        <Link to="transactions">
           <ListItem>Largest sell</ListItem>
-          <ListItemSub>Today</ListItemSub>
+          <ListItemSub>The last 24 hours</ListItemSub>
         </Link>
       </Flex>
     </NavbarContainer>
