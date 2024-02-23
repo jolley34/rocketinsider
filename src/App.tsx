@@ -1,9 +1,18 @@
 import { Outlet } from "react-router-dom";
+import styled from "styled-components";
+
+const Root = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(25, 25, 25);
+`;
 
 function App() {
   return (
     <>
-      <Outlet />
+      <Root>
+        <Outlet />
+      </Root>
     </>
   );
 }

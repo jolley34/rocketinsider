@@ -1,12 +1,6 @@
 import styled from "styled-components";
+import Navbar from "../../components/Navbar";
 import Header from "./Header";
-import Navbar from "./Navbar";
-
-const Root = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: rgb(25, 25, 25);
-`;
 
 const Flex = styled.section`
   display: flex;
@@ -15,12 +9,10 @@ const Flex = styled.section`
 
 function HomePage() {
   return (
-    <Root>
-      <Flex>
-        <Header />
-        <Navbar />
-      </Flex>
-    </Root>
+    <Flex>
+      <Header />
+      <Navbar />
+    </Flex>
   );
 }
 
