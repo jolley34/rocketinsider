@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Navbar from "../../components/Navbar";
+import NavbarHome from "../../components/NavbarHome";
 import Header from "./Header";
 
 const Flex = styled.section`
@@ -11,7 +11,7 @@ function HomePage() {
   return (
     <Flex>
       <Header />
-      <Navbar />
+      <NavbarHome />
     </Flex>
   );
 }

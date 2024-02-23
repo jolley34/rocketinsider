@@ -32,17 +32,17 @@ const ListItemSub = styled(ListItem)`
   font-size: 1.25rem;
 `;
 
-function Navbar() {
+function NavbarHome() {
   return (
     <NavbarContainer>
       <Flex>
-        <Link to="transactions">
+        <Link to="/transactions">
           <ListItem>Largest purchase</ListItem>
           <ListItemSub>The last 24 hours</ListItemSub>
         </Link>
       </Flex>
       <Flex>
-        <Link to="transactions">
+        <Link to="/transactions">
           <ListItem>Largest sell</ListItem>
           <ListItemSub>The last 24 hours</ListItemSub>
         </Link>
@@ -51,4 +51,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavbarHome;

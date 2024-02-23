@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Menu from "../../components/Menu";
+import NavbarTransaction from "../../components/NavbarTransaction";
 
 const FlexBetween = styled.div`
   display: flex;
@@ -37,6 +38,7 @@ function TransactionHeader() {
       <Link to="/">
         <SubTitle>rocketinsider.</SubTitle>
       </Link>
+      <NavbarTransaction />
     </Wrapper>
   );
 }
