@@ -64,7 +64,7 @@ function ApiProvider(props: PropsWithChildren) {
     };
 
     fetchData();
-  }, []);
+  });
 
   return (
     <ApiContext.Provider value={{ insiderData }}>
