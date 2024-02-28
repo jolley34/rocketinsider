@@ -1,17 +1,34 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useApi } from "../../Contexts/TransactionContext";
+import config from "../../config/config";
+import TransactionHeader from "./TransactionHeader";
+
+interface TransactionData {
+  name: string;
+  share: number;
+  change: number;
+  transactionDate: string;
+  transactionCode: string;
+  transactionPrice: number;
+  currency: string;
+  symbol: string;
+  totalAmount: number;
+}
 
 const GridContainer = styled.section`
   display: grid;
   gap: 2rem;
-  padding-inline: 5rem;
+  padding: 0 5rem;
   grid-template-columns: repeat(3, 1fr);
   margin-top: 2rem;
 `;
 
-const Symbol = styled.h1`
-  color: #c2dee9;
-  font-size: 3rem;
+const GridCard = styled.div`
+  background-color: #202020;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const SubTitle = styled.p`
@@ -20,18 +37,14 @@ const SubTitle = styled.p`
   font-size: 0.9rem;
 `;
 
-const GridCard = styled.div`
-  background-color: #202020;
-  padding: 4rem;
-  display: flex;
-  gap: 0.5rem;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Info = styled.h1`
+const Info = styled.p`
   color: #c2dee9;
   font-size: 1rem;
+`;
+
+const Symbol = styled.h1`
+  color: #c2dee9;
+  font-size: 3rem;
 `;
 
 const AmountBuyInfo = styled(Info)`
@@ -44,13 +57,33 @@ const AmountSellInfo = styled(Info)`
   color: #b94c46;
 `;
 
-const TransactionPage = () => {
-  const { insiderData } = useApi();
+function TransactionPage() {
+  const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const symbol = "";
+        const apiKey = config.apiKey;
+        const response = await fetch(
+          `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
+        );
+        const responseData = await response.json();
+        if (Array.isArray(responseData.data)) {
+          setTransactionData(responseData.data);
+        }
+      } catch (error) {
+        console.error("Cant find data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <GridContainer>
-      {insiderData &&
-        insiderData.map((transaction, index) => (
+    <>
+      <TransactionHeader />
+      <GridContainer>
+        {transactionData.map((transaction, index) => (
           <GridCard key={index}>
             <SubTitle>Symbol</SubTitle>
             <Symbol>{transaction.symbol}</Symbol>
@@ -58,20 +91,15 @@ const TransactionPage = () => {
             <Info>{transaction.name}</Info>
             <SubTitle>Transaction Date</SubTitle>
             <Info>{transaction.transactionDate}</Info>
-            <SubTitle>Shares Bought</SubTitle>
-            <Info>{transaction.change}</Info>
-            <SubTitle>Average Price Per Share</SubTitle>
+            <SubTitle>Transaction Code</SubTitle>
+            <Info>{transaction.transactionCode}</Info>
+            <SubTitle>Transaction Average Price</SubTitle>
             <Info>{transaction.transactionPrice}</Info>
-            <SubTitle>Amount</SubTitle>
-            {transaction.transactionCode === "P" ? (
-              <AmountBuyInfo>{transaction.totalAmount}</AmountBuyInfo>
-            ) : (
-              <AmountSellInfo>{transaction.totalAmount}</AmountSellInfo>
-            )}
           </GridCard>
         ))}
-    </GridContainer>
+      </GridContainer>
+    </>
   );
-};
+}
 
 export default TransactionPage;
