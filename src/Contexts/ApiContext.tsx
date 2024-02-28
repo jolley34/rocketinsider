@@ -52,7 +52,6 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           const summaryData: { [key: string]: TransactionData } = {};
 
           // Funktion för att summera och slå samman transaktioner med samma namn
-          // Funktion för att summera och slå samman transaktioner med samma namn
           const mergeTransactions = (transaction: TransactionData) => {
             const key = `${transaction.name}-${transaction.transactionCode}`;
 

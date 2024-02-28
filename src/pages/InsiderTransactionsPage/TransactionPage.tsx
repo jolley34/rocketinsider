@@ -138,9 +138,13 @@ function TransactionPage() {
               <Info>{transaction.transactionPrice}</Info>
               <SubTitle>Total Amount</SubTitle>
               {transaction.transactionCode === "S" ? (
-                <AmountSellInfo>{transaction.totalAmount} $</AmountSellInfo>
+                <AmountSellInfo>
+                  {transaction.totalAmount.toLocaleString("sv-SE")} $
+                </AmountSellInfo>
               ) : (
-                <AmountBuyInfo>{transaction.totalAmount} $</AmountBuyInfo>
+                <AmountBuyInfo>
+                  {transaction.totalAmount.toLocaleString("sv-SE")} $
+                </AmountBuyInfo>
               )}
             </GridCard>
           ))}
