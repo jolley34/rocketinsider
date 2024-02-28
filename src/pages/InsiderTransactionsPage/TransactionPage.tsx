@@ -9,6 +9,7 @@ const GridContainer = styled.section`
   padding: 0 5rem;
   grid-template-columns: repeat(3, 1fr);
   margin-top: 2rem;
+  overflow-x: scroll;
 `;
 
 const Flex = styled.div`
