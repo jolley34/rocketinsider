@@ -35,13 +35,13 @@ function NavbarTransaction() {
   return (
     <NavbarContainer>
       <Flex>
-        <Link to="/transactions">
+        <Link to="/transactions?type=purchase">
           <ListItem>Largest purchase</ListItem>
           <ListItemSub>The last 24 hours</ListItemSub>
         </Link>
       </Flex>
       <Flex>
-        <Link to="/transactions">
+        <Link to="/transactions?type=sell">
           <ListItem>Largest sell</ListItem>
           <ListItemSub>The last 24 hours</ListItemSub>
         </Link>

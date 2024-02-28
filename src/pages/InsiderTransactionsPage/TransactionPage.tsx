@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import TransactionHeader from "./TransactionHeader";
+import { useApi } from "../../Contexts/TransactionContext"; // Assuming this is the correct path to your ApiProvider
 
 const GridContainer = styled.section`
   display: grid;
@@ -34,68 +34,44 @@ const Info = styled.h1`
   font-size: 1rem;
 `;
 
-/* Köp Färg Grön */
 const AmountBuyInfo = styled(Info)`
   font-size: 1.5rem;
   color: #8bce92;
 `;
 
-/* Sälj Färg Röd */
 const AmountSellInfo = styled(Info)`
   font-size: 1.5rem;
   color: #b94c46;
 `;
 
-function TransactionPage() {
+const TransactionPage = () => {
+  const { insiderData } = useApi();
+
   return (
-    <>
-      <TransactionHeader />
-      <GridContainer>
-        <GridCard>
-          <SubTitle>Symbol</SubTitle>
-          <Symbol>TSLA</Symbol>
-          <SubTitle>Name</SubTitle>
-          <Info>Elon Musk</Info>
-          <SubTitle>Transaction Date</SubTitle>
-          <Info>22/11-2023</Info>
-          <SubTitle>Shares Bought</SubTitle>
-          <Info>50 000</Info>
-          <SubTitle>Average Price Per Share</SubTitle>
-          <Info>194.32</Info>
-          <SubTitle>Amount</SubTitle>
-          <AmountBuyInfo>500 000 000 $</AmountBuyInfo>
-        </GridCard>
-        <GridCard>
-          <SubTitle>Symbol</SubTitle>
-          <Symbol>LUNR</Symbol>
-          <SubTitle>Name</SubTitle>
-          <Info>TO THE MOON</Info>
-          <SubTitle>Transaction Date</SubTitle>
-          <Info>23/02-2024</Info>
-          <SubTitle>Shares Bought</SubTitle>
-          <Info>400 000</Info>
-          <SubTitle>Average Price Per Share</SubTitle>
-          <Info>10000.54</Info>
-          <SubTitle>Amount</SubTitle>
-          <AmountBuyInfo>400 000 000 000 $</AmountBuyInfo>
-        </GridCard>
-        <GridCard>
-          <SubTitle>Symbol</SubTitle>
-          <Symbol>PLEJD</Symbol>
-          <SubTitle>Name</SubTitle>
-          <Info>Unkown</Info>
-          <SubTitle>Transaction Date</SubTitle>
-          <Info>22/11-2023</Info>
-          <SubTitle>Shares Bought</SubTitle>
-          <Info>300 000</Info>
-          <SubTitle>Average Price Per Share</SubTitle>
-          <Info>103.35</Info>
-          <SubTitle>Amount</SubTitle>
-          <AmountBuyInfo>30 000 000 $</AmountBuyInfo>
-        </GridCard>
-      </GridContainer>
-    </>
+    <GridContainer>
+      {insiderData &&
+        insiderData.map((transaction, index) => (
+          <GridCard key={index}>
+            <SubTitle>Symbol</SubTitle>
+            <Symbol>{transaction.symbol}</Symbol>
+            <SubTitle>Name</SubTitle>
+            <Info>{transaction.name}</Info>
+            <SubTitle>Transaction Date</SubTitle>
+            <Info>{transaction.transactionDate}</Info>
+            <SubTitle>Shares Bought</SubTitle>
+            <Info>{transaction.change}</Info>
+            <SubTitle>Average Price Per Share</SubTitle>
+            <Info>{transaction.transactionPrice}</Info>
+            <SubTitle>Amount</SubTitle>
+            {transaction.transactionCode === "P" ? (
+              <AmountBuyInfo>{transaction.totalAmount}</AmountBuyInfo>
+            ) : (
+              <AmountSellInfo>{transaction.totalAmount}</AmountSellInfo>
+            )}
+          </GridCard>
+        ))}
+    </GridContainer>
   );
-}
+};
 
 export default TransactionPage;
