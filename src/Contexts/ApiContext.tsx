@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useSearchParams } from "react-router-dom";
 import config from "../config/config";
 
 // Gränssnitt för transaktionsdata
@@ -30,6 +31,7 @@ const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
 // Komponent för att tillhandahålla API-data via kontexten
 function ApiProvider(props: PropsWithChildren<{}>) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
 
   // Hämta data från API:et vid montering av komponenten
@@ -49,39 +51,41 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           // Skapa ett objekt för att lagra summerad transaktionsdata
           const summaryData: { [key: string]: TransactionData } = {};
 
-          responseData.data.forEach((transaction: TransactionData) => {
-            if (
-              (transaction.transactionCode === "P" ||
-                transaction.transactionCode === "S") &&
-              new Date(transaction.transactionDate).getTime() <=
-                twentyFourHoursFromNow
-            ) {
-              // Generera en unik nyckel med hjälp av namn och transaktionsdatum
-              const key = `${transaction.name}-${transaction.transactionDate}`;
+          responseData.data
+            .filter((t) => t.transactionCode === "S")
+            .forEach((transaction: TransactionData) => {
+              if (
+                (transaction.transactionCode === "P" ||
+                  transaction.transactionCode === "S") &&
+                new Date(transaction.transactionDate).getTime() <=
+                  twentyFourHoursFromNow
+              ) {
+                // Generera en unik nyckel med hjälp av namn och transaktionsdatum
+                const key = `${transaction.name}-${transaction.transactionDate}`;
 
-              // Om nyckeln redan finns, lägg till transaktionsbeloppen
-              if (summaryData[key]) {
-                summaryData[key].totalAmount += Math.round(
-                  transaction.change * transaction.transactionPrice
-                );
-                summaryData[key].change += transaction.change;
-              } else {
-                // Annars, initiera summerad data
-                summaryData[key] = {
-                  ...transaction,
-                  totalAmount: Math.round(
+                // Om nyckeln redan finns, lägg till transaktionsbeloppen
+                if (summaryData[key]) {
+                  summaryData[key].totalAmount += Math.round(
                     transaction.change * transaction.transactionPrice
-                  ),
-                };
+                  );
+                  summaryData[key].change += transaction.change;
+                } else {
+                  // Annars, initiera summerad data
+                  summaryData[key] = {
+                    ...transaction,
+                    totalAmount: Math.round(
+                      transaction.change * transaction.transactionPrice
+                    ),
+                  };
+                }
               }
-            }
-          });
+            });
 
           // Konvertera objektvärden tillbaka till en array
           const displayData = Object.values(summaryData);
 
           // Sortera arrayen efter totalAmount i fallande ordning
-          displayData.sort((a, b) => b.totalAmount - a.totalAmount);
+          displayData.sort((a, b) => a.totalAmount - b.totalAmount);
 
           // Ta de första N-elementen (här är det 5)
           const topTransactions = displayData.slice(0, 5);
@@ -94,6 +98,10 @@ function ApiProvider(props: PropsWithChildren<{}>) {
 
     fetchData();
   }, []);
+
+  const purchaseType = searchParams.get("type");
+  console.log(purchaseType);
+  // gruppera och filtrera på purcahsetyp...
 
   // Returnera komponenten med kontextvärde
   return (

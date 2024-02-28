@@ -11,6 +11,12 @@ const GridContainer = styled.section`
   margin-top: 2rem;
 `;
 
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const GridCard = styled.div`
   background-color: #202020;
   padding: 4rem;
@@ -23,6 +29,12 @@ const SubTitle = styled.p`
   color: #6693a5;
   font-weight: 600;
   font-size: 0.9rem;
+`;
+
+const Number = styled(SubTitle)`
+  color: #a7b9c0;
+  font-weight: 600;
+  font-size: 3rem;
 `;
 
 const Info = styled.p`
@@ -80,7 +92,14 @@ function TransactionPage() {
         <GridContainer>
           {transactionData.slice(0, 3).map((transaction, index) => (
             <GridCard key={index}>
-              <Symbol>{transaction.symbol}</Symbol>
+              <Flex>
+                <Symbol>{transaction.symbol}</Symbol>
+                <Number>#{index + 1}</Number>
+              </Flex>
+              <Flex>
+                <div></div>
+                <SubTitle>NUMBER</SubTitle>
+              </Flex>
               <SubTitle>Name</SubTitle>
               <Info>{transaction.name}</Info>
               <SubTitle>Transaction Date</SubTitle>
