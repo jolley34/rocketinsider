@@ -38,6 +38,8 @@ function ApiProvider(props: PropsWithChildren) {
           `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
         );
 
+        console.log(response);
+
         const mappedTransactions = response.data
           .filter(
             (transaction: TransactionData) =>
