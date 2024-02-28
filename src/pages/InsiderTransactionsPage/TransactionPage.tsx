@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import config from "../../config/config";
+import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
 
 interface TransactionData {
@@ -58,26 +57,7 @@ const AmountSellInfo = styled(Info)`
 `;
 
 function TransactionPage() {
-  const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const symbol = "";
-        const apiKey = config.apiKey;
-        const response = await fetch(
-          `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
-        );
-        const responseData = await response.json();
-        if (Array.isArray(responseData.data)) {
-          setTransactionData(responseData.data);
-        }
-      } catch (error) {
-        console.error("Cant find data", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { transactionData } = useApi();
 
   return (
     <>
