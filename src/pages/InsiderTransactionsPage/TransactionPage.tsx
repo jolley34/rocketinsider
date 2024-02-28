@@ -90,7 +90,7 @@ function TransactionPage() {
         <Loader />
       ) : (
         <GridContainer>
-          {transactionData.map((transaction, index) => (
+          {transactionData.slice(0, 3).map((transaction, index) => (
             <GridCard key={index}>
               <SubTitle>Symbol</SubTitle>
               <Symbol>{transaction.symbol}</Symbol>
@@ -100,6 +100,8 @@ function TransactionPage() {
               <Info>{transaction.transactionDate}</Info>
               <SubTitle>Transaction Code</SubTitle>
               <Info>{transaction.transactionCode}</Info>
+              <SubTitle>Shares Bought</SubTitle>
+              <Info>{transaction.change}</Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
             </GridCard>
