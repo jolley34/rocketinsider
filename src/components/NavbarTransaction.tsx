@@ -15,10 +15,7 @@ const ListItem = styled.li`
   font-size: 1rem;
   font-weight: 700;
   color: #c2dee9;
-  border-bottom: solid 3px #7fc7e3;
   margin-top: 1rem;
-  padding-bottom: 0.25rem;
-  padding-top: 0.25rem;
   cursor: pointer;
 `;
 
@@ -28,7 +25,7 @@ const ListItemSub = styled(ListItem)`
   text-align: left;
   font-weight: 700;
   color: #7fc7e3;
-  font-size: 0.75rem;
+  font-size: 0.6rem;
 `;
 
 function NavbarTransaction() {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Menu from "../../components/Menu";
@@ -10,21 +9,21 @@ const FlexBetween = styled.div`
   justify-content: space-between;
 `;
 
-const Title = styled.h1`
-  color: #c2dee9;
-  font-weight: 700;
-  font-size: 2rem;
-`;
-
 const SubTitle = styled.h1`
   color: #7fc7e3;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.5rem;
 `;
 
 const Wrapper = styled.section`
-  padding: 4rem 5rem 4rem 5rem;
-  background: #1d1d1d;
+  padding: 2rem 5rem 0rem 5rem;
+  background: rgb(25, 25, 25);
+`;
+
+const Border = styled.div`
+  border-bottom: solid 2px #c3d1d7;
+  width: 100%;
+  margin-top: 0.5rem;
 `;
 
 function TransactionHeader() {
@@ -32,14 +31,13 @@ function TransactionHeader() {
     <Wrapper>
       <FlexBetween>
         <Link to="/">
-          <Title>explore</Title>
+          <SubTitle>rocketinsider.</SubTitle>
         </Link>
         <Menu />
       </FlexBetween>
-      <Link to="/">
-        <SubTitle>rocketinsider.</SubTitle>
-      </Link>
+
       <NavbarTransaction />
+      <Border />
     </Wrapper>
   );
 }

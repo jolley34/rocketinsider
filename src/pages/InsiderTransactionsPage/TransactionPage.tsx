@@ -31,6 +31,7 @@ const CardAnimation = keyframes`
 
 const GridCard = styled.div`
   background-color: #202020;
+  border-radius: 10px;
   padding: 4rem;
   display: flex;
   flex-direction: column;
@@ -124,7 +125,7 @@ function TransactionPage() {
                   <IsParamSellOrBuy>BUY</IsParamSellOrBuy>
                 )}
               </Flex>
-              <SubTitle>Name</SubTitle>
+              <SubTitle>Insider Name</SubTitle>
               <Info>{transaction.name}</Info>
               <SubTitle>Transaction Date</SubTitle>
               <Info>{transaction.transactionDate}</Info>
