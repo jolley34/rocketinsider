@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
 import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
 
@@ -56,28 +57,55 @@ const AmountSellInfo = styled(Info)`
   color: #b94c46;
 `;
 
+const LoadingAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Loader = styled.div`
+  border: 8px solid #c2dee9;
+  border-top: 8px solid #7fc7e3;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: ${LoadingAnimation} 2s linear infinite;
+  margin: auto;
+  margin-top: 2rem;
+`;
+
 function TransactionPage() {
   const { transactionData } = useApi();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (transactionData.length > 0) {
+      setLoading(false);
+    }
+  }, [transactionData]);
 
   return (
     <>
       <TransactionHeader />
-      <GridContainer>
-        {transactionData.map((transaction, index) => (
-          <GridCard key={index}>
-            <SubTitle>Symbol</SubTitle>
-            <Symbol>{transaction.symbol}</Symbol>
-            <SubTitle>Name</SubTitle>
-            <Info>{transaction.name}</Info>
-            <SubTitle>Transaction Date</SubTitle>
-            <Info>{transaction.transactionDate}</Info>
-            <SubTitle>Transaction Code</SubTitle>
-            <Info>{transaction.transactionCode}</Info>
-            <SubTitle>Transaction Average Price</SubTitle>
-            <Info>{transaction.transactionPrice}</Info>
-          </GridCard>
-        ))}
-      </GridContainer>
+      {loading || !transactionData ? (
+        <Loader />
+      ) : (
+        <GridContainer>
+          {transactionData.map((transaction, index) => (
+            <GridCard key={index}>
+              <SubTitle>Symbol</SubTitle>
+              <Symbol>{transaction.symbol}</Symbol>
+              <SubTitle>Name</SubTitle>
+              <Info>{transaction.name}</Info>
+              <SubTitle>Transaction Date</SubTitle>
+              <Info>{transaction.transactionDate}</Info>
+              <SubTitle>Transaction Code</SubTitle>
+              <Info>{transaction.transactionCode}</Info>
+              <SubTitle>Transaction Average Price</SubTitle>
+              <Info>{transaction.transactionPrice}</Info>
+            </GridCard>
+          ))}
+        </GridContainer>
+      )}
     </>
   );
 }
