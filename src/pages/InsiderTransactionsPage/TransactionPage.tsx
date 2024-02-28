@@ -24,6 +24,7 @@ const GridCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 480px;
 `;
 
 const SubTitle = styled.p`
@@ -35,12 +36,13 @@ const SubTitle = styled.p`
 const Number = styled(SubTitle)`
   color: #a7b9c0;
   font-weight: 600;
-  font-size: 3rem;
+  font-size: 1.5rem;
 `;
 
 const Info = styled.p`
   color: #c2dee9;
   font-size: 1rem;
+  font-weight: 500;
 `;
 
 const Symbol = styled.h1`
@@ -56,6 +58,11 @@ const AmountBuyInfo = styled(Info)`
 const AmountSellInfo = styled(Info)`
   font-size: 1.5rem;
   color: #b94c46;
+`;
+
+const IsParamSellOrBuy = styled.h1`
+  color: #c2dee9;
+  font-size: 1.25rem;
 `;
 
 const LoadingAnimation = keyframes`
@@ -99,20 +106,30 @@ function TransactionPage() {
               </Flex>
               <Flex>
                 <div></div>
-                <SubTitle>NUMBER</SubTitle>
+                {transaction.transactionCode === "S" ? (
+                  <IsParamSellOrBuy>SELL</IsParamSellOrBuy>
+                ) : (
+                  <IsParamSellOrBuy>BUY</IsParamSellOrBuy>
+                )}
               </Flex>
               <SubTitle>Name</SubTitle>
               <Info>{transaction.name}</Info>
               <SubTitle>Transaction Date</SubTitle>
               <Info>{transaction.transactionDate}</Info>
-              <SubTitle>Transaction Code</SubTitle>
-              <Info>{transaction.transactionCode}</Info>
-              <SubTitle>Shares Bought</SubTitle>
+              {transaction.transactionCode === "S" ? (
+                <SubTitle>Shares Sold</SubTitle>
+              ) : (
+                <SubTitle>Shares Bought</SubTitle>
+              )}
               <Info>{transaction.change}</Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
               <SubTitle>Total Amount</SubTitle>
-              <Info>{transaction.totalAmount}</Info>
+              {transaction.transactionCode === "S" ? (
+                <AmountSellInfo>{transaction.totalAmount} $</AmountSellInfo>
+              ) : (
+                <AmountBuyInfo>{transaction.totalAmount} $</AmountBuyInfo>
+              )}
             </GridCard>
           ))}
         </GridContainer>
