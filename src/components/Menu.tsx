@@ -22,7 +22,7 @@ const CloseButton = styled.button<MenuOpen>`
   color: #c2dee9;
   font-size: 2rem;
   cursor: pointer;
-  z-index: 1;
+  z-index: 11;
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
 `;
 
@@ -35,6 +35,7 @@ const DropDown = styled.div<MenuOpen>`
   overflow: hidden;
   height: ${({ isOpen }) => (isOpen ? "100vh" : "0")};
   transition: height 0.3s ease-in-out;
+  z-index: 10;
 `;
 
 function Menu() {

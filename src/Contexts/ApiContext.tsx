@@ -51,6 +51,39 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           // Skapa ett objekt för att lagra summerad transaktionsdata
           const summaryData: { [key: string]: TransactionData } = {};
 
+          // Funktion för att summera och slå samman transaktioner med samma namn
+          // Funktion för att summera och slå samman transaktioner med samma namn
+          const mergeTransactions = (transaction: TransactionData) => {
+            const key = `${transaction.name}-${transaction.transactionCode}`;
+
+            if (summaryData[key]) {
+              summaryData[key].totalAmount += Math.round(
+                transaction.change * transaction.transactionPrice
+              );
+              summaryData[key].change += transaction.change;
+
+              // Kolla om datumet redan finns i sammanfogningsobjektet
+              if (
+                !summaryData[key].transactionDate.includes(
+                  transaction.transactionDate
+                )
+              ) {
+                // Lägg till det unika datumet
+                summaryData[
+                  key
+                ].transactionDate += ` / ${transaction.transactionDate}`;
+              }
+            } else {
+              summaryData[key] = {
+                ...transaction,
+                totalAmount: Math.round(
+                  transaction.change * transaction.transactionPrice
+                ),
+              };
+            }
+          };
+
+          // Loopa igenom transaktionsdata och sammanfoga transaktioner med samma namn
           responseData.data.forEach((transaction: TransactionData) => {
             if (
               (transaction.transactionCode === "P" ||
@@ -58,21 +91,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
               new Date(transaction.transactionDate).getTime() <=
                 twentyFourHoursFromNow
             ) {
-              const key = `${transaction.name}-${transaction.transactionDate}`;
-
-              if (summaryData[key]) {
-                summaryData[key].totalAmount += Math.round(
-                  transaction.change * transaction.transactionPrice
-                );
-                summaryData[key].change += transaction.change;
-              } else {
-                summaryData[key] = {
-                  ...transaction,
-                  totalAmount: Math.round(
-                    transaction.change * transaction.transactionPrice
-                  ),
-                };
-              }
+              mergeTransactions(transaction);
             }
           });
 

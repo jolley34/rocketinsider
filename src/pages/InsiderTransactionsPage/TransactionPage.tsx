@@ -18,6 +18,17 @@ const Flex = styled.div`
   align-items: center;
 `;
 
+const CardAnimation = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const GridCard = styled.div`
   background-color: #202020;
   padding: 4rem;
@@ -25,6 +36,7 @@ const GridCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 480px;
+  animation: ${CardAnimation} 0.3s ease-out forwards;
 `;
 
 const SubTitle = styled.p`
