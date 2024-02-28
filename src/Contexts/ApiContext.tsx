@@ -33,8 +33,8 @@ const ApiContext = createContext<ContextValue>({ transactionData: [] });
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
+  const [filteredData, setFilteredData] = useState<TransactionData[]>([]);
 
-  // Hämta data från API:et vid montering av komponenten
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,45 +51,34 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           // Skapa ett objekt för att lagra summerad transaktionsdata
           const summaryData: { [key: string]: TransactionData } = {};
 
-          responseData.data
-            .filter((t) => t.transactionCode === "S")
-            .forEach((transaction: TransactionData) => {
-              if (
-                (transaction.transactionCode === "P" ||
-                  transaction.transactionCode === "S") &&
-                new Date(transaction.transactionDate).getTime() <=
-                  twentyFourHoursFromNow
-              ) {
-                // Generera en unik nyckel med hjälp av namn och transaktionsdatum
-                const key = `${transaction.name}-${transaction.transactionDate}`;
+          responseData.data.forEach((transaction: TransactionData) => {
+            if (
+              (transaction.transactionCode === "P" ||
+                transaction.transactionCode === "S") &&
+              new Date(transaction.transactionDate).getTime() <=
+                twentyFourHoursFromNow
+            ) {
+              const key = `${transaction.name}-${transaction.transactionDate}`;
 
-                // Om nyckeln redan finns, lägg till transaktionsbeloppen
-                if (summaryData[key]) {
-                  summaryData[key].totalAmount += Math.round(
+              if (summaryData[key]) {
+                summaryData[key].totalAmount += Math.round(
+                  transaction.change * transaction.transactionPrice
+                );
+                summaryData[key].change += transaction.change;
+              } else {
+                summaryData[key] = {
+                  ...transaction,
+                  totalAmount: Math.round(
                     transaction.change * transaction.transactionPrice
-                  );
-                  summaryData[key].change += transaction.change;
-                } else {
-                  // Annars, initiera summerad data
-                  summaryData[key] = {
-                    ...transaction,
-                    totalAmount: Math.round(
-                      transaction.change * transaction.transactionPrice
-                    ),
-                  };
-                }
+                  ),
+                };
               }
-            });
+            }
+          });
 
-          // Konvertera objektvärden tillbaka till en array
-          const displayData = Object.values(summaryData);
+          let displayData = Object.values(summaryData);
 
-          // Sortera arrayen efter totalAmount i fallande ordning
-          displayData.sort((a, b) => a.totalAmount - b.totalAmount);
-
-          // Ta de första N-elementen (här är det 5)
-          const topTransactions = displayData.slice(0, 5);
-          setTransactionData(topTransactions);
+          setTransactionData(displayData);
         }
       } catch (error) {
         console.error("Kan inte hitta data", error);
@@ -99,18 +88,29 @@ function ApiProvider(props: PropsWithChildren<{}>) {
     fetchData();
   }, []);
 
-  const purchaseType = searchParams.get("type");
-  console.log(purchaseType);
-  // gruppera och filtrera på purcahsetyp...
+  useEffect(() => {
+    const purchaseType = searchParams.get("type");
 
-  // Returnera komponenten med kontextvärde
+    // Skapa en kopia av transaktionsdatan för att sortera utan att påverka ursprunglig data
+    const dataToSort = [...transactionData];
+
+    // Sortera data beroende på köp- eller säljtyp
+    if (purchaseType === "sell") {
+      dataToSort.sort((a, b) => a.totalAmount - b.totalAmount); // Säljordning, högsta totala belopp först
+    } else if (purchaseType === "purchase") {
+      dataToSort.sort((a, b) => b.totalAmount - a.totalAmount); // Köpordning, lägsta totala belopp först
+    }
+
+    // Uppdatera filtrerad data med sorterad data
+    setFilteredData(dataToSort);
+  }, [transactionData, searchParams]);
+
   return (
-    <ApiContext.Provider value={{ transactionData }}>
+    <ApiContext.Provider value={{ transactionData: filteredData }}>
       {props.children}
     </ApiContext.Provider>
   );
 }
 
-// Användarhook för att konsumera API-kontexten
 export const useApi = () => useContext(ApiContext);
 export default ApiProvider;

@@ -8,11 +8,6 @@ const Root = styled.div`
   background-color: rgb(25, 25, 25);
 `;
 
-const Footer = styled.div`
-  background-color: rgb(25, 25, 25);
-  padding: 4rem;
-`;
-
 function App() {
   return (
     <>
