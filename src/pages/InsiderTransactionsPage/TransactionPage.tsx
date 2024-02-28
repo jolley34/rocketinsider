@@ -3,18 +3,6 @@ import styled, { keyframes } from "styled-components";
 import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
 
-interface TransactionData {
-  name: string;
-  share: number;
-  change: number;
-  transactionDate: string;
-  transactionCode: string;
-  transactionPrice: number;
-  currency: string;
-  symbol: string;
-  totalAmount: number;
-}
-
 const GridContainer = styled.section`
   display: grid;
   gap: 2rem;
@@ -92,7 +80,6 @@ function TransactionPage() {
         <GridContainer>
           {transactionData.slice(0, 3).map((transaction, index) => (
             <GridCard key={index}>
-              <SubTitle>Symbol</SubTitle>
               <Symbol>{transaction.symbol}</Symbol>
               <SubTitle>Name</SubTitle>
               <Info>{transaction.name}</Info>
@@ -104,6 +91,8 @@ function TransactionPage() {
               <Info>{transaction.change}</Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
+              <SubTitle>Total Amount</SubTitle>
+              <Info>{transaction.totalAmount}</Info>
             </GridCard>
           ))}
         </GridContainer>
