@@ -22,18 +22,17 @@ const ListItem = styled.li<listItemProp>`
   color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
   margin-top: 1rem;
   position: relative;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease-in-out;
 `;
 
 const ListItemBorder = styled.div<listItemProp>`
-  position: absolute;
   bottom: 0;
   left: 0;
   width: ${({ isSelected }) => (isSelected ? "100%" : "0")};
   height: 2px;
   background-color: ${({ isSelected }) =>
     isSelected ? "#7fc7e3" : "transparent"};
-  transition: width 0.3s ease, background-color 0.3s ease;
+  transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `;
 
 const ListItemSub = styled.span<listItemProp>`
@@ -43,12 +42,12 @@ const ListItemSub = styled.span<listItemProp>`
   font-weight: 700;
   color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
   font-size: 0.6rem;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease-in-out;
 `;
 
 const ListItemContainer = styled.div<listItemProp>`
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease-in-out;
   &:hover {
     color: #7fc7e3;
     ${ListItem} {
@@ -59,6 +58,7 @@ const ListItemContainer = styled.div<listItemProp>`
     }
     ${ListItemBorder} {
       background-color: #7fc7e3;
+      width: 100%;
     }
   }
 `;

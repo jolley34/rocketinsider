@@ -23,7 +23,7 @@ const ListItem = styled.div<ListItemProp>`
   font-weight: 700;
   margin-top: 1rem;
   position: relative;
-  transition: margin 0.3s ease;
+  transition: margin 0.3s ease-in-out;
 `;
 
 const ListItemSub = styled(ListItem)<ListItemProp>`
@@ -33,26 +33,24 @@ const ListItemSub = styled(ListItem)<ListItemProp>`
   font-weight: 700;
   font-size: 1rem;
   color: #7fc7e3;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease-in-out;
 `;
 
 const ListItemBorder = styled.div<ListItemProp>`
-  position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 3px;
   background-color: #7fc7e3;
-  transition: width 0.3s ease, margin 0.3s ease;
+  transition: width 0.3s ease-in-out;
 `;
 
 const ListItemContainer = styled.div<ListItemProp>`
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease-in-out;
   &:hover {
     ${ListItem} {
       color: #7fc7e3;
-      margin-bottom: 0.5rem;
     }
     ${ListItemBorder} {
       width: 100%;
