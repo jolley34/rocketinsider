@@ -1,6 +1,6 @@
 import React, {
-  PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
@@ -29,81 +29,82 @@ interface ContextValue {
 // Skapar en kontext för API-anrop
 const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
+// Funktion för att hämta och filtrera data
+async function fetchDataAndFilterData(setTransactionData: Function) {
+  try {
+    const symbol = "";
+    const apiKey = config.apiKey;
+    const response = await fetch(
+      `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
+    );
+    const responseData = await response.json();
+    if (Array.isArray(responseData.data)) {
+      const currentTime = new Date().getTime();
+      const twentyFourHoursFromNow = currentTime + 24 * 60 * 60 * 1000;
+
+      // Skapa ett objekt för att lagra summerad transaktionsdata
+      const summaryData: { [key: string]: TransactionData } = {};
+
+      // Funktion för att summera och slå samman transaktioner med samma namn
+      const mergeTransactions = (transaction: TransactionData) => {
+        const key = `${transaction.name}-${transaction.transactionCode}`;
+
+        if (summaryData[key]) {
+          summaryData[key].totalAmount += Math.round(
+            transaction.change * transaction.transactionPrice
+          );
+          summaryData[key].change += transaction.change;
+
+          // Kolla om datumet redan finns i sammanfogningsobjektet
+          if (
+            !summaryData[key].transactionDate.includes(
+              transaction.transactionDate
+            )
+          ) {
+            // Lägg till det unika datumet
+            summaryData[
+              key
+            ].transactionDate += ` / ${transaction.transactionDate}`;
+          }
+        } else {
+          summaryData[key] = {
+            ...transaction,
+            totalAmount: Math.round(
+              transaction.change * transaction.transactionPrice
+            ),
+          };
+        }
+      };
+
+      // Loopa igenom transaktionsdata och sammanfoga transaktioner med samma namn
+      responseData.data.forEach((transaction: TransactionData) => {
+        if (
+          (transaction.transactionCode === "P" ||
+            transaction.transactionCode === "S") &&
+          new Date(transaction.transactionDate).getTime() <=
+            twentyFourHoursFromNow
+        ) {
+          mergeTransactions(transaction);
+        }
+      });
+
+      let displayData = Object.values(summaryData);
+
+      setTransactionData(displayData);
+    }
+  } catch (error) {
+    console.error("Kan inte hitta data", error);
+  }
+}
+
 // Komponent för att tillhandahålla API-data via kontexten
 function ApiProvider(props: PropsWithChildren<{}>) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
   const [filteredData, setFilteredData] = useState<TransactionData[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const symbol = "";
-        const apiKey = config.apiKey;
-        const response = await fetch(
-          `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
-        );
-        const responseData = await response.json();
-        if (Array.isArray(responseData.data)) {
-          const currentTime = new Date().getTime();
-          const twentyFourHoursFromNow = currentTime + 24 * 60 * 60 * 1000;
-
-          // Skapa ett objekt för att lagra summerad transaktionsdata
-          const summaryData: { [key: string]: TransactionData } = {};
-
-          // Funktion för att summera och slå samman transaktioner med samma namn
-          const mergeTransactions = (transaction: TransactionData) => {
-            const key = `${transaction.name}-${transaction.transactionCode}`;
-
-            if (summaryData[key]) {
-              summaryData[key].totalAmount += Math.round(
-                transaction.change * transaction.transactionPrice
-              );
-              summaryData[key].change += transaction.change;
-
-              // Kolla om datumet redan finns i sammanfogningsobjektet
-              if (
-                !summaryData[key].transactionDate.includes(
-                  transaction.transactionDate
-                )
-              ) {
-                // Lägg till det unika datumet
-                summaryData[
-                  key
-                ].transactionDate += ` / ${transaction.transactionDate}`;
-              }
-            } else {
-              summaryData[key] = {
-                ...transaction,
-                totalAmount: Math.round(
-                  transaction.change * transaction.transactionPrice
-                ),
-              };
-            }
-          };
-
-          // Loopa igenom transaktionsdata och sammanfoga transaktioner med samma namn
-          responseData.data.forEach((transaction: TransactionData) => {
-            if (
-              (transaction.transactionCode === "P" ||
-                transaction.transactionCode === "S") &&
-              new Date(transaction.transactionDate).getTime() <=
-                twentyFourHoursFromNow
-            ) {
-              mergeTransactions(transaction);
-            }
-          });
-
-          let displayData = Object.values(summaryData);
-
-          setTransactionData(displayData);
-        }
-      } catch (error) {
-        console.error("Kan inte hitta data", error);
-      }
-    };
-
-    fetchData();
+    fetchDataAndFilterData(setTransactionData);
   }, []);
 
   useEffect(() => {
