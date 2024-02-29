@@ -20,6 +20,7 @@ interface TransactionData {
   symbol: string;
   totalAmount: number;
   companyName: string;
+  logo: string;
 }
 
 // En TypeScript-interface som definierar strukturen för context-värdet.

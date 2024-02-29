@@ -89,7 +89,7 @@ const AmountSellInfo = styled(Info)`
 
 const IsParamSellOrBuy = styled.h1`
   color: #c2dee9;
-  font-size: 1.25rem;
+  font-size: 1rem;
 `;
 
 const LoadingAnimation = keyframes`
