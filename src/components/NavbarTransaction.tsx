@@ -8,21 +8,23 @@ type listItemProp = {
 
 const Flex = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const NavbarContainer = styled.ul`
-  display: flex;
-  gap: 2rem;
+  margin-top: 1rem;
 `;
 
 const ListItem = styled.li<listItemProp>`
   font-size: 1rem;
   font-weight: 700;
   color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
-  margin-top: 1rem;
   position: relative;
   transition: color 0.3s ease-in-out;
+  &:hover {
+    color: #7fc7e3;
+  }
 `;
 
 const ListItemBorder = styled.div<listItemProp>`
@@ -33,30 +35,27 @@ const ListItemBorder = styled.div<listItemProp>`
   background-color: ${({ isSelected }) =>
     isSelected ? "#7fc7e3" : "transparent"};
   transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #7fc7e3;
+    width: 100%;
+  }
 `;
 
-const ListItemSub = styled.span<listItemProp>`
-  text-align: left;
+const ListItemSub = styled.span`
   font-weight: 700;
-  color: ${({ isSelected }) => (isSelected ? "#c2dee9" : "#c2dee9")};
-  font-size: 0.6rem;
+  font-size: 1rem;
+  color: #c2dee9;
   transition: color 0.3s ease-in-out;
 `;
 
-const ListItemContainer = styled.div<listItemProp>`
+const StyledLink = styled(Link)<listItemProp>``;
+
+const ListItemContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
   cursor: pointer;
   transition: color 0.3s ease-in-out;
-  &:hover {
-    color: #7fc7e3;
-    ${ListItem} {
-      color: #7fc7e3;
-    }
-
-    ${ListItemBorder} {
-      background-color: #7fc7e3;
-      width: 100%;
-    }
-  }
 `;
 
 function NavbarTransaction() {
@@ -69,8 +68,9 @@ function NavbarTransaction() {
   return (
     <NavbarContainer>
       <Flex>
-        <Link to="/transactions?type=purchase">
-          <ListItemContainer
+        <ListItemContainer>
+          <StyledLink
+            to="/transactions?type=purchase"
             isSelected={selectedNavItem === "/transactions?type=purchase"}
             onClick={() => handleSelect("/transactions?type=purchase")}
           >
@@ -78,21 +78,14 @@ function NavbarTransaction() {
               isSelected={selectedNavItem === "/transactions?type=purchase"}
             >
               Largest purchase
-              <ListItemBorder
-                isSelected={selectedNavItem === "/transactions?type=purchase"}
-              />
             </ListItem>
-            <ListItemSub
+            <ListItemBorder
               isSelected={selectedNavItem === "/transactions?type=purchase"}
-            >
-              The last 24 hours
-            </ListItemSub>
-          </ListItemContainer>
-        </Link>
-      </Flex>
-      <Flex>
-        <Link to="/transactions?type=sell">
-          <ListItemContainer
+            />
+          </StyledLink>
+
+          <StyledLink
+            to="/transactions?type=sell"
             isSelected={selectedNavItem === "/transactions?type=sell"}
             onClick={() => handleSelect("/transactions?type=sell")}
           >
@@ -100,17 +93,13 @@ function NavbarTransaction() {
               isSelected={selectedNavItem === "/transactions?type=sell"}
             >
               Largest sell
-              <ListItemBorder
-                isSelected={selectedNavItem === "/transactions?type=sell"}
-              />
             </ListItem>
-            <ListItemSub
+            <ListItemBorder
               isSelected={selectedNavItem === "/transactions?type=sell"}
-            >
-              The last 24 hours
-            </ListItemSub>
-          </ListItemContainer>
-        </Link>
+            />
+          </StyledLink>
+        </ListItemContainer>
+        <ListItemSub>The last 24 hours</ListItemSub>
       </Flex>
     </NavbarContainer>
   );
