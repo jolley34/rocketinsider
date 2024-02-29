@@ -6,7 +6,13 @@ import NavbarContextProvider from "./Contexts/NavbarContext";
 const Root = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: rgb(25, 25, 25);
+  background-color: #53626d;
+  background-image: linear-gradient(
+    43deg,
+    #53626d 0%,
+    #508ca8 46%,
+    #ffcc70 100%
+  );
 `;
 
 function App() {

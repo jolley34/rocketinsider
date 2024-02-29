@@ -9,7 +9,7 @@ type GridCardProps = {
 
 const GridContainer = styled.section`
   display: grid;
-  gap: 2rem;
+  gap: 3rem;
   padding: 0 5rem;
   grid-template-columns: repeat(3, 1fr);
   margin-top: 2rem;
@@ -34,13 +34,18 @@ const CardAnimation = keyframes`
 `;
 
 const GridCard = styled.div<GridCardProps>`
-  background-color: #202020;
-  border-radius: 10px;
+  background-color: #00000079;
+  mix-blend-mode: lighten;
+  border-radius: 10px 10px 10px 10px;
   padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 550px;
+  height: 630px;
+  backdrop-filter: blur(33px);
+  box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
+  background-blend-mode: overlay;
+  box-sizing: border-box;
   animation: ${({ animated }) =>
     animated &&
     css`
@@ -63,13 +68,13 @@ const Number = styled(SubTitle)`
 const Info = styled.p`
   color: #c2dee9;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
 `;
 
 const CompanyName = styled(Info)`
   color: #c2dee9;
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 400;
 `;
 
 const Symbol = styled.h1`
@@ -80,11 +85,13 @@ const Symbol = styled.h1`
 const AmountBuyInfo = styled(Info)`
   font-size: 2rem;
   color: #8bce92;
+  font-weight: 600;
 `;
 
 const AmountSellInfo = styled(Info)`
   font-size: 2rem;
   color: #b94c46;
+  font-weight: 600;
 `;
 
 const IsParamSellOrBuy = styled.h1`
