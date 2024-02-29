@@ -24,7 +24,7 @@ const SubTitle = styled.h1<subTitleProps>`
 
 const Wrapper = styled.section`
   padding: 2rem 5rem 0rem 5rem;
-  background: rgb(25, 25, 25);
+  background: #1d1d1d;
 `;
 
 const Border = styled.div`
