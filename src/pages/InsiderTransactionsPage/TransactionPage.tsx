@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
@@ -128,7 +128,7 @@ function TransactionPage() {
           {transactionData.slice(0, 3).map((transaction, index) => (
             <GridCard key={index} animated={animated}>
               <Flex>
-                <Symbol>{transaction.symbol}</Symbol>
+                <Symbol>{transaction.symbol || "Unknown"}</Symbol>
                 <Number>#{index + 1}</Number>
               </Flex>
               <Flex>
