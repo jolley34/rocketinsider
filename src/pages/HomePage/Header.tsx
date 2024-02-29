@@ -18,7 +18,7 @@ const Title = styled.h1<TitleProps>`
   font-weight: 700;
   font-size: 2rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.4s ease-out;
 `;
 
 const SubTitle = styled.h1<TitleProps>`
@@ -26,7 +26,7 @@ const SubTitle = styled.h1<TitleProps>`
   font-weight: 700;
   font-size: 2rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 1.2s ease-in-out;
 `;
 
 const Wrapper = styled.section`
