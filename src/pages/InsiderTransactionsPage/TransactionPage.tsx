@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
+
+type GridCardProps = {
+  animated: boolean;
+};
 
 const GridContainer = styled.section`
   display: grid;
@@ -29,15 +33,19 @@ const CardAnimation = keyframes`
   }
 `;
 
-const GridCard = styled.div`
+const GridCard = styled.div<GridCardProps>`
   background-color: #202020;
   border-radius: 10px;
   padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 480px;
-  animation: ${CardAnimation} 0.3s ease-out forwards;
+  height: 550px;
+  animation: ${({ animated }) =>
+    animated &&
+    css`
+      ${CardAnimation} 0.3s ease-out forwards;
+    `};
 `;
 
 const SubTitle = styled.p`
@@ -97,10 +105,16 @@ const Loader = styled.div`
 function TransactionPage() {
   const { transactionData } = useApi();
   const [loading, setLoading] = useState(true);
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
     if (transactionData.length > 0) {
       setLoading(false);
+      setAnimated(true);
+      const timer = setTimeout(() => {
+        setAnimated(false);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [transactionData]);
 
@@ -112,28 +126,26 @@ function TransactionPage() {
       ) : (
         <GridContainer>
           {transactionData.slice(0, 3).map((transaction, index) => (
-            <GridCard key={index}>
+            <GridCard key={index} animated={animated}>
               <Flex>
                 <Symbol>{transaction.symbol}</Symbol>
                 <Number>#{index + 1}</Number>
               </Flex>
               <Flex>
                 <div></div>
-                {transaction.transactionCode === "S" ? (
-                  <IsParamSellOrBuy>SELL</IsParamSellOrBuy>
-                ) : (
-                  <IsParamSellOrBuy>BUY</IsParamSellOrBuy>
-                )}
+                <IsParamSellOrBuy>
+                  {transaction.transactionCode === "S" ? "SELL" : "BUY"}
+                </IsParamSellOrBuy>
               </Flex>
               <SubTitle>Insider Name</SubTitle>
               <Info>{transaction.name}</Info>
               <SubTitle>Transaction Date</SubTitle>
               <Info>{transaction.transactionDate}</Info>
-              {transaction.transactionCode === "S" ? (
-                <SubTitle>Shares Sold</SubTitle>
-              ) : (
-                <SubTitle>Shares Bought</SubTitle>
-              )}
+              <SubTitle>
+                {transaction.transactionCode === "S"
+                  ? "Shares Sold"
+                  : "Shares Bought"}
+              </SubTitle>
               <Info>{transaction.change}</Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
