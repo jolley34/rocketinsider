@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavbar } from "../Contexts/NavbarContext";
 
-type listItemProp = {
+type ListItemProp = {
   isSelected: boolean;
 };
 
@@ -17,29 +17,45 @@ const NavbarContainer = styled.ul`
   padding: 0rem 10rem;
 `;
 
-const ListItemContainer = styled.div<listItemProp>`
-  cursor: pointer;
-  &:hover {
-    color: #7fc7e3;
-  }
-`;
-
-const ListItem = styled.li`
+const ListItem = styled.div<ListItemProp>`
+  color: #c2dee9;
   font-size: 2rem;
   font-weight: 700;
   margin-top: 1rem;
+  position: relative;
 `;
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-`;
-
-const ListItemSub = styled(ListItem)`
+const ListItemSub = styled(ListItem)<ListItemProp>`
   border-bottom: none;
   margin-top: 0rem;
   text-align: left;
   font-weight: 700;
   font-size: 1rem;
+  color: #7fc7e3;
+  transition: color 0.3s ease;
+`;
+
+const ListItemBorder = styled.div<ListItemProp>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: #7fc7e3;
+  transition: width 0.3s ease;
+`;
+
+const ListItemContainer = styled.div<ListItemProp>`
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    ${ListItem} {
+      color: #7fc7e3;
+    }
+    ${ListItemBorder} {
+      width: 100%;
+    }
+  }
 `;
 
 function NavbarHome() {
@@ -52,26 +68,48 @@ function NavbarHome() {
   return (
     <NavbarContainer>
       <Flex>
-        <StyledLink to="/transactions?type=purchase">
+        <Link to="/transactions?type=purchase">
           <ListItemContainer
             isSelected={selectedNavItem === "/transactions?type=purchase"}
             onClick={() => handleSelect("/transactions?type=purchase")}
           >
-            <ListItem>Largest purchase</ListItem>
-            <ListItemSub>The last 24 hours</ListItemSub>
+            <ListItem
+              isSelected={selectedNavItem === "/transactions?type=sell"}
+            >
+              Largest purchase
+              <ListItemBorder
+                isSelected={selectedNavItem === "/transactions?type=purchase"}
+              />
+            </ListItem>
+            <ListItemSub
+              isSelected={selectedNavItem === "/transactions?type=purchase"}
+            >
+              The last 24 hours
+            </ListItemSub>
           </ListItemContainer>
-        </StyledLink>
+        </Link>
       </Flex>
       <Flex>
-        <StyledLink to="/transactions?type=sell">
+        <Link to="/transactions?type=sell">
           <ListItemContainer
             isSelected={selectedNavItem === "/transactions?type=sell"}
             onClick={() => handleSelect("/transactions?type=sell")}
           >
-            <ListItem>Largest sell</ListItem>
-            <ListItemSub>The last 24 hours</ListItemSub>
+            <ListItem
+              isSelected={selectedNavItem === "/transactions?type=sell"}
+            >
+              Largest sell
+              <ListItemBorder
+                isSelected={selectedNavItem === "/transactions?type=sell"}
+              />
+            </ListItem>
+            <ListItemSub
+              isSelected={selectedNavItem === "/transactions?type=sell"}
+            >
+              The last 24 hours
+            </ListItemSub>
           </ListItemContainer>
-        </StyledLink>
+        </Link>
       </Flex>
     </NavbarContainer>
   );

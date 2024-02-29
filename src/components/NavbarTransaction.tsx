@@ -21,13 +21,19 @@ const ListItem = styled.li<listItemProp>`
   font-weight: 700;
   color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
   margin-top: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
 `;
 
-const ListItemContainer = styled.div<listItemProp>`
-  cursor: pointer;
-  &:hover {
-    color: #7fc7e3;
-  }
+const ListItemBorder = styled.div<listItemProp>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: ${({ isSelected }) => (isSelected ? "100%" : "0")};
+  height: 2px;
+  background-color: ${({ isSelected }) =>
+    isSelected ? "#7fc7e3" : "transparent"};
+  transition: width 0.3s ease, background-color 0.3s ease;
 `;
 
 const ListItemSub = styled.span<listItemProp>`
@@ -37,6 +43,24 @@ const ListItemSub = styled.span<listItemProp>`
   font-weight: 700;
   color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
   font-size: 0.6rem;
+  transition: color 0.3s ease;
+`;
+
+const ListItemContainer = styled.div<listItemProp>`
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #7fc7e3;
+    ${ListItem} {
+      color: #7fc7e3;
+    }
+    ${ListItemSub} {
+      color: #7fc7e3;
+    }
+    ${ListItemBorder} {
+      background-color: #7fc7e3;
+    }
+  }
 `;
 
 function NavbarTransaction() {
@@ -58,6 +82,9 @@ function NavbarTransaction() {
               isSelected={selectedNavItem === "/transactions?type=purchase"}
             >
               Largest purchase
+              <ListItemBorder
+                isSelected={selectedNavItem === "/transactions?type=purchase"}
+              />
             </ListItem>
             <ListItemSub
               isSelected={selectedNavItem === "/transactions?type=purchase"}
@@ -77,6 +104,9 @@ function NavbarTransaction() {
               isSelected={selectedNavItem === "/transactions?type=sell"}
             >
               Largest sell
+              <ListItemBorder
+                isSelected={selectedNavItem === "/transactions?type=sell"}
+              />
             </ListItem>
             <ListItemSub
               isSelected={selectedNavItem === "/transactions?type=sell"}
