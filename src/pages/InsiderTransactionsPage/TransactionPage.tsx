@@ -140,7 +140,7 @@ function TransactionPage() {
               <SubTitle>Total Amount</SubTitle>
               {transaction.transactionCode === "S" ? (
                 <AmountSellInfo>
-                  {transaction.totalAmount.toLocaleString("sv-SE")} $
+                  {Math.abs(transaction.totalAmount).toLocaleString("sv-SE")} $
                 </AmountSellInfo>
               ) : (
                 <AmountBuyInfo>
