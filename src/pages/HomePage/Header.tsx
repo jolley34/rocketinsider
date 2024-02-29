@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Menu from "../../components/Menu";
+
+type TitleProps = {
+  isVisible: boolean;
+};
 
 const FlexBetween = styled.div`
   display: flex;
@@ -9,16 +13,20 @@ const FlexBetween = styled.div`
   justify-content: space-between;
 `;
 
-const Title = styled.h1`
+const Title = styled.h1<TitleProps>`
   color: #c2dee9;
   font-weight: 700;
   font-size: 2rem;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 0.2s ease-out;
 `;
 
-const SubTitle = styled.h1`
+const SubTitle = styled.h1<TitleProps>`
   color: #7fc7e3;
   font-weight: 700;
   font-size: 2rem;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 0.5s ease-in-out;
 `;
 
 const Wrapper = styled.section`
@@ -27,16 +35,26 @@ const Wrapper = styled.section`
 `;
 
 function Header() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <Wrapper>
       <FlexBetween>
         <Link to="/">
-          <Title>explore</Title>
+          <Title isVisible={isVisible}>explore</Title>
         </Link>
         <Menu />
       </FlexBetween>
       <Link to="/">
-        <SubTitle>rocketinsider.</SubTitle>
+        <SubTitle isVisible={isVisible}>rocketinsider.</SubTitle>
       </Link>
     </Wrapper>
   );
