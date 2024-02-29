@@ -15,6 +15,7 @@ const Flex = styled.div`
 
 const NavbarContainer = styled.ul`
   margin-top: 1rem;
+  padding-bottom: 1rem;
 `;
 
 const ListItem = styled.li<listItemProp>`

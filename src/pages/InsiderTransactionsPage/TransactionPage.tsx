@@ -90,7 +90,7 @@ const AmountBuyInfo = styled(Info)`
 
 const AmountSellInfo = styled(Info)`
   font-size: 2rem;
-  color: #b94c46;
+  color: #f7635b;
   font-weight: 600;
 `;
 

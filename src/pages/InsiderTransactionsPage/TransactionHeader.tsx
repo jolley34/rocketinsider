@@ -54,7 +54,6 @@ function TransactionHeader() {
       </FlexBetween>
 
       <NavbarTransaction />
-      <Border />
     </Wrapper>
   );
 }
