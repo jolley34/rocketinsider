@@ -36,11 +36,9 @@ const ListItemBorder = styled.div<listItemProp>`
 `;
 
 const ListItemSub = styled.span<listItemProp>`
-  border-bottom: none;
-  margin-top: 0rem;
   text-align: left;
   font-weight: 700;
-  color: ${({ isSelected }) => (isSelected ? "#7fc7e3" : "#c2dee9")};
+  color: ${({ isSelected }) => (isSelected ? "#c2dee9" : "#c2dee9")};
   font-size: 0.6rem;
   transition: color 0.3s ease-in-out;
 `;
@@ -53,9 +51,7 @@ const ListItemContainer = styled.div<listItemProp>`
     ${ListItem} {
       color: #7fc7e3;
     }
-    ${ListItemSub} {
-      color: #7fc7e3;
-    }
+
     ${ListItemBorder} {
       background-color: #7fc7e3;
       width: 100%;

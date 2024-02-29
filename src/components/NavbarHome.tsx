@@ -52,6 +52,9 @@ const ListItemContainer = styled.div<ListItemProp>`
     ${ListItem} {
       color: #7fc7e3;
     }
+    ${ListItemSub} {
+      color: #c2dee9;
+    }
     ${ListItemBorder} {
       width: 100%;
     }
