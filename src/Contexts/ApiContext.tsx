@@ -8,7 +8,6 @@ import React, {
 import { useSearchParams } from "react-router-dom";
 import config from "../config/config";
 
-// Gränssnitt för transaktionsdata
 interface TransactionData {
   name: string;
   share: number;
@@ -21,109 +20,85 @@ interface TransactionData {
   totalAmount: number;
 }
 
-// Gränssnitt för värde i kontexten
 interface ContextValue {
   transactionData: TransactionData[];
 }
 
-// Skapar en kontext för API-anrop
 const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
-// Funktion för att hämta och filtrera data
-async function fetchDataAndFilterData(setTransactionData: Function) {
-  try {
-    const symbol = "";
-    const apiKey = config.apiKey;
-    const response = await fetch(
-      `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
-    );
-    const responseData = await response.json();
-    if (Array.isArray(responseData.data)) {
-      const currentTime = new Date().getTime();
-      const twentyFourHoursFromNow = currentTime + 24 * 60 * 60 * 1000;
-
-      // Skapa ett objekt för att lagra summerad transaktionsdata
-      const summaryData: { [key: string]: TransactionData } = {};
-
-      // Funktion för att summera och slå samman transaktioner med samma namn
-      const mergeTransactions = (transaction: TransactionData) => {
-        const key = `${transaction.name}-${transaction.transactionCode}`;
-
-        if (summaryData[key]) {
-          summaryData[key].totalAmount += Math.round(
-            transaction.change * transaction.transactionPrice
-          );
-          summaryData[key].change += transaction.change;
-
-          // Kolla om datumet redan finns i sammanfogningsobjektet
-          if (
-            !summaryData[key].transactionDate.includes(
-              transaction.transactionDate
-            )
-          ) {
-            // Lägg till det unika datumet
-            summaryData[
-              key
-            ].transactionDate += ` / ${transaction.transactionDate}`;
-          }
-        } else {
-          summaryData[key] = {
-            ...transaction,
-            totalAmount: Math.round(
-              transaction.change * transaction.transactionPrice
-            ),
-          };
-        }
-      };
-
-      // Loopa igenom transaktionsdata och sammanfoga transaktioner med samma namn
-      responseData.data.forEach((transaction: TransactionData) => {
-        if (
-          (transaction.transactionCode === "P" ||
-            transaction.transactionCode === "S") &&
-          new Date(transaction.transactionDate).getTime() <=
-            twentyFourHoursFromNow
-        ) {
-          mergeTransactions(transaction);
-        }
-      });
-
-      let displayData = Object.values(summaryData);
-
-      setTransactionData(displayData);
-    }
-  } catch (error) {
-    console.error("Kan inte hitta data", error);
-  }
+async function fetchData(symbol: string): Promise<TransactionData[]> {
+  const apiKey = config.apiKey;
+  const response = await fetch(
+    `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
+  );
+  const responseData = await response.json();
+  return responseData.data.filter((transaction: TransactionData) =>
+    ["P", "S"].includes(transaction.transactionCode)
+  );
 }
 
-// Komponent för att tillhandahålla API-data via kontexten
+function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
+  const summaryData: { [key: string]: TransactionData } = {};
+  transactions.forEach((transaction: TransactionData) => {
+    const key = `${transaction.name}-${transaction.transactionCode}`;
+    if (summaryData[key]) {
+      summaryData[key].totalAmount += Math.round(
+        transaction.change * transaction.transactionPrice
+      );
+      summaryData[key].change += transaction.change;
+      if (
+        !summaryData[key].transactionDate.includes(transaction.transactionDate)
+      ) {
+        summaryData[key].transactionDate += ` / ${transaction.transactionDate}`;
+      }
+    } else {
+      summaryData[key] = {
+        ...transaction,
+        totalAmount: Math.round(
+          transaction.change * transaction.transactionPrice
+        ),
+      };
+    }
+  });
+  return Object.values(summaryData);
+}
+
+function sortAndFilterData(
+  transactionData: TransactionData[],
+  purchaseType: string | null
+): TransactionData[] {
+  const sortedData = [...transactionData];
+  if (purchaseType === "sell") {
+    return sortedData.sort((a, b) => a.totalAmount - b.totalAmount).slice(0, 3);
+  } else if (purchaseType === "purchase") {
+    return sortedData.sort((a, b) => b.totalAmount - a.totalAmount).slice(0, 3);
+  }
+  return sortedData;
+}
+
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
   const [filteredData, setFilteredData] = useState<TransactionData[]>([]);
 
   useEffect(() => {
-    fetchDataAndFilterData(setTransactionData);
+    async function fetchDataAndSetTransactionData() {
+      try {
+        const data = await fetchData("");
+        const mergedData = mergeTransactions(data);
+        setTransactionData(mergedData);
+      } catch (error) {
+        console.error("Kan inte hitta data", error);
+      }
+    }
+    fetchDataAndSetTransactionData();
   }, []);
 
   useEffect(() => {
     const purchaseType = searchParams.get("type");
-
-    // Skapa en kopia av transaktionsdatan för att sortera utan att påverka ursprunglig data
-    const dataToSort = [...transactionData];
-
-    // Sortera data beroende på köp- eller säljtyp
-    if (purchaseType === "sell") {
-      dataToSort.sort((a, b) => a.totalAmount - b.totalAmount); // Säljordning, högsta totala belopp först
-    } else if (purchaseType === "purchase") {
-      dataToSort.sort((a, b) => b.totalAmount - a.totalAmount); // Köpordning, lägsta totala belopp först
-    }
-
-    // Uppdatera filtrerad data med sorterad data och begränsa till 3 största transaktioner
-    const filteredTopTransactions = dataToSort.slice(0, 3);
-    setFilteredData(filteredTopTransactions);
-    console.log(filteredTopTransactions); // filteredTopTransaction visar enbart de tre största köp och sälj, denna ska jag utveckla vidare för att visa CurrentPrice Osv
+    const sortedData = sortAndFilterData(transactionData, purchaseType);
+    setFilteredData(sortedData);
+    console.log(purchaseType);
   }, [transactionData, searchParams]);
 
   return (
