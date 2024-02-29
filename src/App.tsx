@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import NavbarContextProvider from "./Contexts/NavbarContext";
 
 const Root = styled.div`
   width: 100vw;
@@ -12,7 +13,9 @@ function App() {
   return (
     <>
       <Root>
-        <Outlet />
+        <NavbarContextProvider>
+          <Outlet />
+        </NavbarContextProvider>
       </Root>
     </>
   );
