@@ -1,4 +1,4 @@
-import {
+import React, {
   PropsWithChildren,
   createContext,
   useContext,
@@ -119,8 +119,9 @@ function ApiProvider(props: PropsWithChildren<{}>) {
       dataToSort.sort((a, b) => b.totalAmount - a.totalAmount); // Köpordning, lägsta totala belopp först
     }
 
-    // Uppdatera filtrerad data med sorterad data
-    setFilteredData(dataToSort);
+    // Uppdatera filtrerad data med sorterad data och begränsa till 3 största transaktioner
+    const filteredTopTransactions = dataToSort.slice(0, 3);
+    setFilteredData(filteredTopTransactions);
   }, [transactionData, searchParams]);
 
   return (
