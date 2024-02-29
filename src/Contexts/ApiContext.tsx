@@ -1,14 +1,13 @@
 import React, {
-  createContext, // Skapar en kontext för att dela data med flera komponenter
+  createContext,
   PropsWithChildren,
-  useContext, // Används för att konsumera värden från en kontext
-  useEffect, // Används för att köra kod när komponenten renderas
-  useState, // Används för att hantera tillstånd i en funktionell komponent
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import { useSearchParams } from "react-router-dom"; // Används för att hantera URL-parametrar
-import config from "../config/config"; // Importerar konfigurationsfilen
+import { useSearchParams } from "react-router-dom";
+import config from "../config/config";
 
-// Definierar datatyper för transaktioner
 interface TransactionData {
   name: string;
   share: number;
@@ -19,29 +18,26 @@ interface TransactionData {
   currency: string;
   symbol: string;
   totalAmount: number;
+  companyName: string;
 }
 
-// Definierar typen för kontextvärdet
 interface ContextValue {
   transactionData: TransactionData[];
 }
 
-// Skapar en kontext för API-data
 const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
-// Funktion för att hämta data från API:et
 async function fetchData(symbol: string): Promise<TransactionData[]> {
-  const apiKey = config.apiKey; // Hämtar API-nyckeln från konfigurationen
+  const apiKey = config.apiKey;
   const response = await fetch(
     `https://finnhub.io/api/v1/stock/insider-transactions?symbol=${symbol}&token=${apiKey}`
-  ); // Hämtar data från API:et
-  const responseData = await response.json(); // Konverterar svaret till JSON-format
+  );
+  const responseData = await response.json();
   return responseData.data.filter((transaction: TransactionData) =>
     ["P", "S"].includes(transaction.transactionCode)
-  ); // Filtrerar och returnerar transaktionsdata
+  );
 }
 
-// Funktion för att sammanfoga transaktioner
 function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
   const summaryData: { [key: string]: TransactionData } = {};
   transactions.forEach((transaction: TransactionData) => {
@@ -68,49 +64,108 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
   return Object.values(summaryData);
 }
 
-// Funktion för att sortera och filtrera data
-function sortAndFilterData(
-  transactionData: TransactionData[],
-  purchaseType: string | null
-): TransactionData[] {
-  const sortedData = [...transactionData];
-  if (purchaseType === "sell") {
-    return sortedData.sort((a, b) => a.totalAmount - b.totalAmount).slice(0, 3);
-  } else if (purchaseType === "purchase") {
-    return sortedData.sort((a, b) => b.totalAmount - a.totalAmount).slice(0, 3);
-  }
-  return sortedData;
+async function getCompanyProfile(symbol: string) {
+  const apiKey = config.apiKey;
+  const response = await fetch(
+    `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
+  );
+  const responseData = await response.json();
+  return responseData;
 }
 
-// Komponent för att tillhandahålla API-data med hjälp av kontext
-function ApiProvider(props: PropsWithChildren<{}>) {
-  const [searchParams] = useSearchParams(); // Hämtar URL-parametrar med hjälp av React Router
-  const [transactionData, setTransactionData] = useState<TransactionData[]>([]); // Tillståndsvariabel för transaktionsdata
-  const [filteredData, setFilteredData] = useState<TransactionData[]>([]); // Tillståndsvariabel för filtrerad data
+async function sortAndFilterData(
+  transactionData: TransactionData[],
+  purchaseType: string | null
+): Promise<TransactionData[]> {
+  let filteredData: TransactionData[] = [...transactionData];
 
-  // Effektfunktion för att hämta och sätta transaktionsdata
+  if (purchaseType === "sell") {
+    filteredData = filteredData
+      .filter((transaction) => transaction.transactionCode === "S")
+      .sort((a, b) => a.totalAmount - b.totalAmount)
+      .slice(0, 3);
+  } else if (purchaseType === "purchase") {
+    filteredData = filteredData
+      .filter((transaction) => transaction.transactionCode === "P")
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .slice(0, 3);
+  } else {
+    // Om ingen typ har angetts, returnera bara de första 3 transaktionerna
+    filteredData = filteredData.slice(0, 3);
+  }
+
+  // Hämta och lägg till företagsnamnen för de filtrerade transaktionerna
+  const transactionsWithCompanyNames = await Promise.all(
+    filteredData.map(async (transaction) => {
+      const companyProfile = await getCompanyProfile(transaction.symbol);
+      return {
+        ...transaction,
+        companyName: companyProfile.name,
+      };
+    })
+  );
+
+  return transactionsWithCompanyNames;
+}
+
+function ApiProvider(props: PropsWithChildren<{}>) {
+  const [searchParams] = useSearchParams();
+  const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
+  const [filteredData, setFilteredData] = useState<TransactionData[]>([]);
+  const [cachedCompanyProfiles, setCachedCompanyProfiles] = useState<{
+    [symbol: string]: any;
+  }>({});
+
   useEffect(() => {
     async function fetchDataAndSetTransactionData() {
       try {
-        const data = await fetchData(""); // Hämtar transaktionsdata från API:et
-        const mergedData = mergeTransactions(data); // Sammanfogar transaktionsdata
-        setTransactionData(mergedData); // Sätter transaktionsdata i tillståndsvariabeln
+        const data = await fetchData("");
+        const mergedData = mergeTransactions(data);
+        setTransactionData(mergedData);
       } catch (error) {
-        console.error("Kan inte hitta data", error); // Hanterar fel om data inte kan hämtas
+        console.error("Kan inte hitta data", error);
       }
     }
-    fetchDataAndSetTransactionData(); // Anropar funktionen för att hämta data när komponenten renderas
+    fetchDataAndSetTransactionData();
   }, []);
 
-  // Effektfunktion för att sortera och filtrera data baserat på URL-parametrar
-  useEffect(() => {
-    const purchaseType = searchParams.get("type"); // Hämtar typen av transaktion från URL-parametrar
-    const sortedData = sortAndFilterData(transactionData, purchaseType); // Sorterar och filtrerar transaktionsdata
-    setFilteredData(sortedData); // Sätter filtrerad data i tillståndsvariabeln
-    console.log(purchaseType); // Loggar typen av transaktion i konsolen
-  }, [transactionData, searchParams]); // Uppdaterar effektfunktionen när transaktionsdata eller URL-parametrar ändras
+  async function getCompanyProfileWithCache(symbol: string) {
+    if (cachedCompanyProfiles[symbol]) {
+      return cachedCompanyProfiles[symbol];
+    } else {
+      const companyProfile = await getCompanyProfile(symbol);
+      setCachedCompanyProfiles((prevState) => ({
+        ...prevState,
+        [symbol]: companyProfile,
+      }));
+      return companyProfile;
+    }
+  }
 
-  // Returnerar Provider-komponenten för API-kontexten med filtrerad data
+  useEffect(() => {
+    const purchaseType = searchParams.get("type");
+    async function updateFilteredData() {
+      const companyNames = await sortAndFilterData(
+        transactionData,
+        purchaseType
+      );
+      // Använd cachad företagsprofil istället för att göra en ny förfrågan
+      const transactionsWithCompanyNames = await Promise.all(
+        companyNames.map(async (transaction) => {
+          const companyProfile = await getCompanyProfileWithCache(
+            transaction.symbol
+          );
+          return {
+            ...transaction,
+            companyName: companyProfile.name,
+          };
+        })
+      );
+      setFilteredData(transactionsWithCompanyNames);
+    }
+    updateFilteredData();
+  }, [transactionData, searchParams]);
+
   return (
     <ApiContext.Provider value={{ transactionData: filteredData }}>
       {props.children}
@@ -118,7 +173,6 @@ function ApiProvider(props: PropsWithChildren<{}>) {
   );
 }
 
-// Anpassad hook för att använda API-kontexten i komponenter
 export const useApi = () => useContext(ApiContext);
 
-export default ApiProvider; // Exporterar ApiProvider-komponenten som standard
+export default ApiProvider;

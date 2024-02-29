@@ -109,10 +109,11 @@ function TransactionPage() {
 
   useEffect(() => {
     if (transactionData.length > 0) {
-      setLoading(false);
+      setLoading(true); // Sätt loading till true när nya data hämtas
       setAnimated(true);
       const timer = setTimeout(() => {
-        setAnimated(false);
+        setAnimated(true);
+        setLoading(false); // Sätt loading till false när animationen är klar
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -132,7 +133,7 @@ function TransactionPage() {
                 <Number>#{index + 1}</Number>
               </Flex>
               <Flex>
-                <div></div>
+                <Info>{transaction.companyName || "Unknown Company Name"}</Info>
                 <IsParamSellOrBuy>
                   {transaction.transactionCode === "S" ? "SELL" : "BUY"}
                 </IsParamSellOrBuy>
