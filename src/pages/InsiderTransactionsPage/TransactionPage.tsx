@@ -66,6 +66,12 @@ const Info = styled.p`
   font-weight: 500;
 `;
 
+const CompanyName = styled(Info)`
+  color: #c2dee9;
+  font-size: 1rem;
+  font-weight: 300;
+`;
+
 const Symbol = styled.h1`
   color: #c2dee9;
   font-size: 3rem;
@@ -133,7 +139,9 @@ function TransactionPage() {
                 <Number>#{index + 1}</Number>
               </Flex>
               <Flex>
-                <Info>{transaction.companyName || "Unknown Company Name"}</Info>
+                <CompanyName>
+                  {transaction.companyName || "Unknown Company Name"}
+                </CompanyName>
                 <IsParamSellOrBuy>
                   {transaction.transactionCode === "S" ? "SELL" : "BUY"}
                 </IsParamSellOrBuy>
