@@ -122,6 +122,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
     // Uppdatera filtrerad data med sorterad data och begränsa till 3 största transaktioner
     const filteredTopTransactions = dataToSort.slice(0, 3);
     setFilteredData(filteredTopTransactions);
+    console.log(filteredTopTransactions); // filteredTopTransaction visar enbart de tre största köp och sälj, denna ska jag utveckla vidare för att visa CurrentPrice Osv
   }, [transactionData, searchParams]);
 
   return (
