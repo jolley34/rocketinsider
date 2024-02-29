@@ -55,7 +55,7 @@ const GridCard = styled.div<GridCardProps>`
 
 const SubTitle = styled.p`
   color: #7fc7e3;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 1rem;
 `;
 
@@ -68,7 +68,7 @@ const Number = styled(SubTitle)`
 const Info = styled.p`
   color: #c2dee9;
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 600;
 `;
 
 const CompanyName = styled(Info)`
