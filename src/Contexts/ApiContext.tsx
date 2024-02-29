@@ -83,7 +83,10 @@ async function getCompanyProfile(symbol: string) {
     `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
   );
   const responseData = await response.json();
-  return responseData;
+  return {
+    name: responseData.name,
+    logo: responseData.logo, // Lägg till logotypen här
+  };
 }
 
 // Funktion för att sortera och filtrera transaktionsdata baserat på köp, försäljning eller inget specifierat.
@@ -110,18 +113,19 @@ async function sortAndFilterData(
     filteredData = filteredData.slice(0, 3);
   }
 
-  // Hämta och lägg till företagsnamnen för de filtrerade transaktionerna.
-  const transactionsWithCompanyNames = await Promise.all(
+  // Hämta företagsnamn och logotyper för de filtrerade transaktionerna.
+  const transactionsWithCompanyData = await Promise.all(
     filteredData.map(async (transaction) => {
       const companyProfile = await getCompanyProfile(transaction.symbol);
       return {
         ...transaction,
         companyName: companyProfile.name,
+        logo: companyProfile.logo, // Lägg till logotypen här
       };
     })
   );
 
-  return transactionsWithCompanyNames;
+  return transactionsWithCompanyData;
 }
 
 // En React-komponent för att tillhandahålla API-data via context.
@@ -172,7 +176,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
         purchaseType
       );
       // Använd cachad företagsprofil istället för att göra en ny förfrågan.
-      const transactionsWithCompanyNames = await Promise.all(
+      const transactionsWithCompanyData = await Promise.all(
         companyNames.map(async (transaction) => {
           const companyProfile = await getCompanyProfileWithCache(
             transaction.symbol
@@ -183,7 +187,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           };
         })
       );
-      setFilteredData(transactionsWithCompanyNames);
+      setFilteredData(transactionsWithCompanyData);
     }
     updateFilteredData();
   }, [transactionData, searchParams]);

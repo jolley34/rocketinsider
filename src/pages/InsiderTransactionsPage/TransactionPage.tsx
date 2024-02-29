@@ -49,9 +49,9 @@ const GridCard = styled.div<GridCardProps>`
 `;
 
 const SubTitle = styled.p`
-  color: #6693a5;
-  font-weight: 600;
-  font-size: 0.9rem;
+  color: #7fc7e3;
+  font-weight: 400;
+  font-size: 1rem;
 `;
 
 const Number = styled(SubTitle)`
@@ -78,18 +78,24 @@ const Symbol = styled.h1`
 `;
 
 const AmountBuyInfo = styled(Info)`
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #8bce92;
 `;
 
 const AmountSellInfo = styled(Info)`
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #b94c46;
 `;
 
 const IsParamSellOrBuy = styled.h1`
   color: #c2dee9;
-  font-size: 1rem;
+  font-size: 2rem;
+`;
+
+const Image = styled.img`
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
 `;
 
 const LoadingAnimation = keyframes`
@@ -136,15 +142,17 @@ function TransactionPage() {
             <GridCard key={index} animated={animated}>
               <Flex>
                 <Symbol>{transaction.symbol || "Unknown"}</Symbol>
-                <Number>#{index + 1}</Number>
+                <Image
+                  src={
+                    transaction.logo ||
+                    "https://www.svgrepo.com/show/340721/no-image.svg"
+                  }
+                />
               </Flex>
               <Flex>
                 <CompanyName>
                   {transaction.companyName || "Unknown Company Name"}
                 </CompanyName>
-                <IsParamSellOrBuy>
-                  {transaction.transactionCode === "S" ? "SELL" : "BUY"}
-                </IsParamSellOrBuy>
               </Flex>
               <SubTitle>Insider Name</SubTitle>
               <Info>{transaction.name}</Info>
@@ -159,15 +167,21 @@ function TransactionPage() {
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
               <SubTitle>Total Amount</SubTitle>
-              {transaction.transactionCode === "S" ? (
-                <AmountSellInfo>
-                  {Math.abs(transaction.totalAmount).toLocaleString("sv-SE")} $
-                </AmountSellInfo>
-              ) : (
-                <AmountBuyInfo>
-                  {transaction.totalAmount.toLocaleString("sv-SE")} $
-                </AmountBuyInfo>
-              )}
+              <Flex>
+                {transaction.transactionCode === "S" ? (
+                  <AmountSellInfo>
+                    {Math.abs(transaction.totalAmount).toLocaleString("sv-SE")}{" "}
+                    $
+                  </AmountSellInfo>
+                ) : (
+                  <AmountBuyInfo>
+                    {transaction.totalAmount.toLocaleString("sv-SE")} $
+                  </AmountBuyInfo>
+                )}
+                <IsParamSellOrBuy>
+                  {transaction.transactionCode === "S" ? "SELL" : "BUY"}
+                </IsParamSellOrBuy>
+              </Flex>
             </GridCard>
           ))}
         </GridContainer>
