@@ -1,7 +1,11 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
 import { useApi } from "../../Contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
+
+type GridCardProps = {
+  animated: boolean;
+};
 
 const GridContainer = styled.section`
   display: grid;
@@ -29,7 +33,7 @@ const CardAnimation = keyframes`
   }
 `;
 
-const GridCard = styled.div`
+const GridCard = styled.div<GridCardProps>`
   background-color: #00000079;
   mix-blend-mode: lighten;
   border-radius: 10px 10px 10px 10px;
@@ -42,6 +46,11 @@ const GridCard = styled.div`
   box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
   background-blend-mode: overlay;
   box-sizing: border-box;
+  animation: ${({ animated }) =>
+    animated &&
+    css`
+      ${CardAnimation} 0.3s ease-out forwards;
+    `};
 `;
 
 const SubTitle = styled.p`
@@ -119,17 +128,28 @@ const Loader = styled.div`
 `;
 
 function TransactionPage() {
-  const { transactionData } = useApi();
+  const { transactionData, loading } = useApi();
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    if (transactionData.length > 0) {
+      setAnimated(true);
+      const timer = setTimeout(() => {
+        setAnimated(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [transactionData]);
 
   return (
     <>
       <TransactionHeader />
-      {!transactionData ? (
+      {loading ? (
         <Loader />
       ) : (
         <GridContainer>
           {transactionData.map((transaction, index) => (
-            <GridCard key={index}>
+            <GridCard key={index} animated={animated}>
               <Flex>
                 <Symbol>{transaction.symbol || "Unknown"}</Symbol>
                 <Image

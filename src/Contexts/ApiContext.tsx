@@ -26,9 +26,13 @@ interface TransactionData {
 
 interface ContextValue {
   transactionData: TransactionData[];
+  loading: boolean;
 }
 
-const ApiContext = createContext<ContextValue>({ transactionData: [] });
+const ApiContext = createContext<ContextValue>({
+  transactionData: [],
+  loading: false,
+});
 
 async function fetchData(url: string) {
   const response = await fetch(url);
@@ -113,10 +117,12 @@ async function getDataFromFilterData(filteredData: TransactionData[]) {
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
   const [summaryData, setSummaryData] = useState<TransactionData[]>([]);
+  const [loading, setLoading] = useState<boolean>(false); // Ny state för att hålla reda på om data hämtas
 
   useEffect(() => {
     async function fetchDataAndSetTransactionData() {
       try {
+        setLoading(true); // Sätt loading till true när data hämtas
         const data = await getInsideTransactions("");
         const mergedData = mergeTransactions(data);
         const purchaseType = searchParams.get("type");
@@ -125,9 +131,11 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           purchaseType
         );
         const processedData = await getDataFromFilterData(filteredTransactions);
-        setSummaryData(processedData); // Uppdaterar summaryData direkt
+        setSummaryData(processedData);
       } catch (error) {
         console.error("Error fetching data", error);
+      } finally {
+        setLoading(false); // Sätt loading till false när data är hämtad
       }
     }
 
@@ -137,7 +145,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
   }, [searchParams]);
 
   return (
-    <ApiContext.Provider value={{ transactionData: summaryData }}>
+    <ApiContext.Provider value={{ transactionData: summaryData, loading }}>
       {props.children}
     </ApiContext.Provider>
   );
