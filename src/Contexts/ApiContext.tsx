@@ -112,7 +112,6 @@ async function getDataFromFilterData(filteredData: TransactionData[]) {
 
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
-  const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
   const [summaryData, setSummaryData] = useState<TransactionData[]>([]);
 
   useEffect(() => {
@@ -126,27 +125,13 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           purchaseType
         );
         const processedData = await getDataFromFilterData(filteredTransactions);
-        setTransactionData(processedData);
+        setSummaryData(processedData); // Uppdaterar summaryData direkt
       } catch (error) {
         console.error("Error fetching data", error);
       }
     }
     fetchDataAndSetTransactionData();
   }, [searchParams]);
-
-  useEffect(() => {
-    async function updateFilteredData() {
-      const purchaseType = searchParams.get("type");
-      const filteredTransactions = await sortAndFilterData(
-        transactionData,
-        purchaseType
-      );
-      const processedData = await getDataFromFilterData(filteredTransactions);
-      setSummaryData(processedData);
-    }
-
-    updateFilteredData();
-  }, [transactionData, searchParams]);
 
   return (
     <ApiContext.Provider value={{ transactionData: summaryData }}>
