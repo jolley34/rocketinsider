@@ -135,8 +135,8 @@ function ApiProvider(props: PropsWithChildren<{}>) {
   }, [searchParams]);
 
   useEffect(() => {
-    const purchaseType = searchParams.get("type");
     async function updateFilteredData() {
+      const purchaseType = searchParams.get("type");
       const filteredTransactions = await sortAndFilterData(
         transactionData,
         purchaseType
@@ -144,6 +144,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
       const processedData = await getDataFromFilterData(filteredTransactions);
       setSummaryData(processedData);
     }
+
     updateFilteredData();
   }, [transactionData, searchParams]);
 
