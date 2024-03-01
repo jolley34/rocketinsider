@@ -47,7 +47,7 @@ const GridCard = styled.div<GridCardProps>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 630px;
+  height: 650px;
   backdrop-filter: blur(33px);
   box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
   background-blend-mode: overlay;
@@ -133,6 +133,20 @@ const Loader = styled.div`
   margin-top: 2rem;
 `;
 
+const PriceDifference = styled(Info)<{ priceChange: number }>`
+  color: ${({ priceChange }) => (priceChange > 0 ? "#8bce92" : "#f7635b")};
+  font-size: 1.25rem;
+  font-weight: 600;
+`;
+
+const calculatePercentageChange = (
+  priceChange: number,
+  transactionPrice: number
+) => {
+  const percentageChange = (priceChange / transactionPrice) * 100;
+  return percentageChange.toFixed(2);
+};
+
 function TransactionPage() {
   const { transactionData, loading } = useApi();
   const [animated, setAnimated] = useState(false);
@@ -178,7 +192,9 @@ function TransactionPage() {
               <Flex>
                 <SubTitle>Insider Name</SubTitle>
               </Flex>
-              <Info>{transaction.name}</Info>
+              <Flex>
+                <Info>{transaction.name}</Info>
+              </Flex>
               <SubTitle>Transaction Date</SubTitle>
               <Info>{transaction.transactionDate}</Info>
               <SubTitle>
@@ -191,6 +207,17 @@ function TransactionPage() {
               </Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
+              <SubTitle>Price Change Since Transaction</SubTitle>
+              <PriceDifference priceChange={transaction.priceDifference}>
+                {transaction.priceDifference > 0 ? "+" : ""}
+                {Math.abs(transaction.priceDifference).toFixed(2)} /{" "}
+                {transaction.priceDifference > 0 ? "+" : ""}
+                {calculatePercentageChange(
+                  transaction.priceDifference,
+                  transaction.transactionPrice
+                )}
+                %
+              </PriceDifference>
               <SubTitle>Total Amount</SubTitle>
               <Flex>
                 {transaction.transactionCode === "S" ? (

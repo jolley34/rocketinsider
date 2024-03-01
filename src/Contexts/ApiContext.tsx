@@ -22,6 +22,7 @@ interface TransactionData {
   companyName?: string;
   logo?: string;
   currentPrice?: number;
+  priceDifference: number;
 }
 
 interface ContextValue {
@@ -114,6 +115,17 @@ async function getDataFromFilterData(filteredData: TransactionData[]) {
   return transactionsWithCompanyData;
 }
 
+function calculatePriceDifference(
+  transactions: TransactionData[]
+): TransactionData[] {
+  return transactions.map((transaction) => ({
+    ...transaction,
+    priceDifference: transaction.currentPrice
+      ? transaction.currentPrice - transaction.transactionPrice
+      : 0,
+  }));
+}
+
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
   const [summaryData, setSummaryData] = useState<TransactionData[]>([]);
@@ -131,7 +143,8 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           purchaseType
         );
         const processedData = await getDataFromFilterData(filteredTransactions);
-        setSummaryData(processedData);
+        const dataWithPriceDifference = calculatePriceDifference(processedData);
+        setSummaryData(dataWithPriceDifference);
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
