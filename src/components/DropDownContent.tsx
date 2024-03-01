@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 const ContentContainer = styled.section`
@@ -25,6 +26,21 @@ const ContentTitle = styled.h1`
   margin-bottom: 1rem;
 `;
 
+const BigMoney = styled.span`
+  color: #8bce92;
+  font-weight: 900;
+`;
+
+const Sell = styled.span`
+  color: #f7635b;
+  font-weight: 900;
+`;
+
+const FontWeight = styled.span`
+  color: #c2dee9;
+  font-weight: 900;
+`;
+
 function DropDownContent() {
   return (
     <ContentContainer>
@@ -35,7 +51,18 @@ function DropDownContent() {
           3 largest INSIDE TRANSACTIONS from the US market the last 24 Hours.
         </Text>
         <Text>
-          This is by no means a financial recommendation to buy, sell, or trade
+          Rather than the typical mundane transaction site inundated with
+          excessive data, endless scrolling through a white background, and an
+          overwhelming amount of text, this platform aims to modernize trading
+          platforms.{" "}
+        </Text>
+        <Text>
+          This is for someone that likes to follow the{" "}
+          <BigMoney>BIG MONEY</BigMoney>.
+        </Text>
+        <Text>
+          Even though this is by <FontWeight>NO</FontWeight> means a financial
+          recommendation to <BigMoney>BUY</BigMoney>/<Sell>SELL</Sell>/ or trade
           the symbol displayed.
         </Text>
       </div>

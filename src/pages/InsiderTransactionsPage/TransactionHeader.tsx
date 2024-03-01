@@ -37,7 +37,7 @@ const BetaTitle = styled.h1<animationProp>`
   font-weight: 700;
   font-size: 1rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 2s ease-in-out;
 `;
 
 const VersionTitle = styled(BetaTitle)<animationProp>`
@@ -45,7 +45,7 @@ const VersionTitle = styled(BetaTitle)<animationProp>`
   font-weight: 700;
   font-size: 0.75rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 2s ease-in-out;
 `;
 
 const Wrapper = styled.section`
@@ -64,7 +64,7 @@ function TransactionHeader() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsVisible(true);
-    }, 50);
+    }, 500);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -78,7 +78,7 @@ function TransactionHeader() {
           </Link>
           <ItemFlex>
             <BetaTitle isVisible={isVisible}>BETA</BetaTitle>
-            <VersionTitle isVisible={isVisible}>Version 0.1</VersionTitle>
+            <VersionTitle isVisible={isVisible}>Version 0.2</VersionTitle>
           </ItemFlex>
         </Flex>
         <Menu />
