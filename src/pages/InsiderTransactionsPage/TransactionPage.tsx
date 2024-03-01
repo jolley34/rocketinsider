@@ -138,8 +138,8 @@ function TransactionPage() {
       setAnimated(true);
       const timer = setTimeout(() => {
         setAnimated(true);
-        setLoading(false); // Sätt loading till false när animationen är klar
-      }, 300);
+        setLoading(false);
+      }, 50);
       return () => clearTimeout(timer);
     }
   }, [transactionData]);
@@ -151,7 +151,7 @@ function TransactionPage() {
         <Loader />
       ) : (
         <GridContainer>
-          {transactionData.slice(0, 3).map((transaction, index) => (
+          {transactionData.map((transaction, index) => (
             <GridCard key={index} animated={animated}>
               <Flex>
                 <Symbol>{transaction.symbol || "Unknown"}</Symbol>
