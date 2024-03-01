@@ -14,6 +14,10 @@ const Flex = styled.div`
   gap: 2rem;
 `;
 
+const ItemFlex = styled(Flex)`
+  gap: 0.25rem;
+`;
+
 const FlexBetween = styled.div`
   display: flex;
   align-items: center;
@@ -32,6 +36,14 @@ const BetaTitle = styled.h1<animationProp>`
   color: #9edaf3;
   font-weight: 700;
   font-size: 1rem;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 1.2s ease-in-out;
+`;
+
+const VersionTitle = styled(BetaTitle)<animationProp>`
+  color: #b3ddef;
+  font-weight: 700;
+  font-size: 0.75rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: opacity 1.2s ease-in-out;
 `;
@@ -64,7 +76,10 @@ function TransactionHeader() {
           <Link to="/">
             <SubTitle isVisible={isVisible}>rocketinsider.</SubTitle>
           </Link>
-          <BetaTitle isVisible={isVisible}>BETA Version 0.1</BetaTitle>
+          <ItemFlex>
+            <BetaTitle isVisible={isVisible}>BETA</BetaTitle>
+            <VersionTitle isVisible={isVisible}>Version 0.1</VersionTitle>
+          </ItemFlex>
         </Flex>
         <Menu />
       </FlexBetween>
