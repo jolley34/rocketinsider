@@ -33,7 +33,9 @@ interface ContextValue {
 const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
 // En asynkron funktion för att hämta insidertransaktionsdata från en extern API-tjänst.
-async function fetchData(symbol: string): Promise<TransactionData[]> {
+async function getCurrentInsideTransactions(
+  symbol: string
+): Promise<TransactionData[]> {
   // Använder en API-nyckel från en konfigurationsfil.
   const apiKey = config.apiKey;
   const response = await fetch(
@@ -44,6 +46,29 @@ async function fetchData(symbol: string): Promise<TransactionData[]> {
   return responseData.data.filter((transaction: TransactionData) =>
     ["P", "S"].includes(transaction.transactionCode)
   );
+}
+
+// Funktion för att hämta företagsprofil baserat på aktiesymbol.
+async function getCompanyProfile(symbol: string) {
+  const apiKey = config.apiKey;
+  const response = await fetch(
+    `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
+  );
+  const responseData = await response.json();
+  return {
+    name: responseData.name,
+    logo: responseData.logo, // Lägg till logotypen här
+  };
+}
+
+// Funktion för att hämta aktuellt pris från Finnhub's Quote API baserat på symbol.
+async function getCurrentPrice(symbol: string): Promise<number> {
+  const apiKey = config.apiKey;
+  const response = await fetch(
+    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
+  );
+  const responseData = await response.json();
+  return responseData.c; // Returnera det aktuella priset från API-svar.
 }
 
 // Funktion för att slå ihop och sammanfoga transaktioner baserat på namn och transaktionskod.
@@ -77,29 +102,6 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
   return Object.values(summaryData);
 }
 
-// Funktion för att hämta företagsprofil baserat på aktiesymbol.
-async function getCompanyProfile(symbol: string) {
-  const apiKey = config.apiKey;
-  const response = await fetch(
-    `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`
-  );
-  const responseData = await response.json();
-  return {
-    name: responseData.name,
-    logo: responseData.logo, // Lägg till logotypen här
-  };
-}
-
-// Funktion för att hämta aktuellt pris från Finnhub's Quote API baserat på symbol.
-async function getCurrentPrice(symbol: string): Promise<number> {
-  const apiKey = config.apiKey;
-  const response = await fetch(
-    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
-  );
-  const responseData = await response.json();
-  return responseData.c; // Returnera det aktuella priset från API-svar.
-}
-
 // Funktion för att sortera och filtrera transaktionsdata baserat på köp, försäljning eller inget specifierat.
 async function sortAndFilterData(
   transactionData: TransactionData[],
@@ -121,20 +123,27 @@ async function sortAndFilterData(
     filteredData = filteredData.slice(0, 3);
   }
 
+  return filteredData;
+}
+
+async function getDataFromFilterData(
+  filteredData: TransactionData[]
+): Promise<TransactionData[]> {
   const transactionsWithCompanyData = await Promise.all(
     filteredData.map(async (transaction) => {
       const companyProfile = await getCompanyProfile(transaction.symbol);
-      const currentPrice = await getCurrentPrice(transaction.symbol); // Ändring här
+      const currentPrice = await getCurrentPrice(transaction.symbol);
       return {
         ...transaction,
         companyName: companyProfile.name,
         logo: companyProfile.logo,
-        currentPrice: currentPrice, // Ändring här
+        currentPrice: currentPrice,
       };
     })
   );
+  console.log(transactionsWithCompanyData);
 
-  return transactionsWithCompanyData;
+  return transactionsWithCompanyData; // Glöm inte att returnera resultatet
 }
 
 // En React-komponent för att tillhandahålla API-data via context.
@@ -143,16 +152,13 @@ function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
   // State Hooks för att lagra olika typer av data.
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
-  const [filteredData, setFilteredData] = useState<TransactionData[]>([]);
-  const [cachedCompanyProfiles, setCachedCompanyProfiles] = useState<{
-    [symbol: string]: any;
-  }>({});
+  const [summaryData, setSummarydData] = useState<TransactionData[]>([]);
 
   // Effektfunktion som körs vid montering för att hämta och sätta transaktionsdata.
   useEffect(() => {
     async function fetchDataAndSetTransactionData() {
       try {
-        const data = await fetchData("");
+        const data = await getCurrentInsideTransactions("");
         const mergedData = mergeTransactions(data);
         setTransactionData(mergedData);
       } catch (error) {
@@ -162,48 +168,25 @@ function ApiProvider(props: PropsWithChildren<{}>) {
     fetchDataAndSetTransactionData();
   }, []);
 
-  // Funktion för att hämta företagsprofil från cachade data eller via nätverksförfrågan.
-  async function getCompanyProfileWithCache(symbol: string) {
-    if (cachedCompanyProfiles[symbol]) {
-      return cachedCompanyProfiles[symbol];
-    } else {
-      const companyProfile = await getCompanyProfile(symbol);
-      setCachedCompanyProfiles((prevState) => ({
-        ...prevState,
-        [symbol]: companyProfile,
-      }));
-      return companyProfile;
-    }
-  }
-
   // Effektfunktion som körs vid förändringar i transaktionsdata eller sökparametrar.
   useEffect(() => {
     const purchaseType = searchParams.get("type");
     async function updateFilteredData() {
-      const companyNames = await sortAndFilterData(
+      const filteredTransactions = await sortAndFilterData(
         transactionData,
         purchaseType
       );
-      // Använd cachad företagsprofil istället för att göra en ny förfrågan.
-      const transactionsWithCompanyData = await Promise.all(
-        companyNames.map(async (transaction) => {
-          const companyProfile = await getCompanyProfileWithCache(
-            transaction.symbol
-          );
-          return {
-            ...transaction,
-            companyName: companyProfile.name,
-          };
-        })
-      );
-      setFilteredData(transactionsWithCompanyData);
+      // Anropa getDataFromFilterData för att få bearbetad data
+      const processedData = await getDataFromFilterData(filteredTransactions);
+      // Uppdatera filteredData med den bearbetade datan
+      setSummarydData(processedData);
     }
     updateFilteredData();
   }, [transactionData, searchParams]);
 
   // Returnera ApiContext.Provider med det filtrerade dataobjektet.
   return (
-    <ApiContext.Provider value={{ transactionData: filteredData }}>
+    <ApiContext.Provider value={{ transactionData: summaryData }}>
       {props.children}
     </ApiContext.Provider>
   );
