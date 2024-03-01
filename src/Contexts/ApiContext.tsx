@@ -33,7 +33,7 @@ interface ContextValue {
 const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
 // En asynkron funktion för att hämta insidertransaktionsdata från en extern API-tjänst.
-async function getCurrentInsideTransactions(
+async function getInsideTransactions(
   symbol: string
 ): Promise<TransactionData[]> {
   // Använder en API-nyckel från en konfigurationsfil.
@@ -158,7 +158,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
   useEffect(() => {
     async function fetchDataAndSetTransactionData() {
       try {
-        const data = await getCurrentInsideTransactions("");
+        const data = await getInsideTransactions("");
         const mergedData = mergeTransactions(data);
         setTransactionData(mergedData);
       } catch (error) {
