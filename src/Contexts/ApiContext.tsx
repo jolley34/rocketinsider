@@ -144,7 +144,7 @@ async function getDataFromFilterData(
   );
   console.log(transactionsWithCompanyData);
 
-  return transactionsWithCompanyData; // Glöm inte att returnera resultatet
+  return transactionsWithCompanyData;
 }
 
 // En React-komponent för att tillhandahålla API-data via context.
