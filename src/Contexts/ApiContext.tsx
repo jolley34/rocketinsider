@@ -3,7 +3,7 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
-  useReducer,
+  useState,
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import config from "../config/config";
@@ -28,27 +28,7 @@ interface ContextValue {
   transactionData: TransactionData[];
 }
 
-const initialState: ContextValue = { transactionData: [] };
-
-const ApiContext = createContext<ContextValue>(initialState);
-
-enum ActionType {
-  SetData = "SET_DATA",
-}
-
-interface Action {
-  type: ActionType;
-  payload: TransactionData[];
-}
-
-function reducer(state: ContextValue, action: Action): ContextValue {
-  switch (action.type) {
-    case ActionType.SetData:
-      return { ...state, transactionData: action.payload };
-    default:
-      return state;
-  }
-}
+const ApiContext = createContext<ContextValue>({ transactionData: [] });
 
 async function fetchData(url: string) {
   const response = await fetch(url);
@@ -132,7 +112,7 @@ async function getDataFromFilterData(filteredData: TransactionData[]) {
 
 function ApiProvider(props: PropsWithChildren<{}>) {
   const [searchParams] = useSearchParams();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [summaryData, setSummaryData] = useState<TransactionData[]>([]);
 
   useEffect(() => {
     async function fetchDataAndSetTransactionData() {
@@ -145,14 +125,7 @@ function ApiProvider(props: PropsWithChildren<{}>) {
           purchaseType
         );
         const processedData = await getDataFromFilterData(filteredTransactions);
-
-        // Kolla om den nya typen av transaktion är annorlunda än den befintliga
-        if (
-          JSON.stringify(processedData) !==
-          JSON.stringify(state.transactionData)
-        ) {
-          dispatch({ type: ActionType.SetData, payload: processedData });
-        }
+        setSummaryData(processedData); // Uppdaterar summaryData direkt
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -161,10 +134,12 @@ function ApiProvider(props: PropsWithChildren<{}>) {
     if (searchParams.get("type")) {
       fetchDataAndSetTransactionData();
     }
-  }, [searchParams, state.transactionData]);
+  }, [searchParams]);
 
   return (
-    <ApiContext.Provider value={state}>{props.children}</ApiContext.Provider>
+    <ApiContext.Provider value={{ transactionData: summaryData }}>
+      {props.children}
+    </ApiContext.Provider>
   );
 }
 
