@@ -130,7 +130,10 @@ function ApiProvider(props: PropsWithChildren<{}>) {
         console.error("Error fetching data", error);
       }
     }
-    fetchDataAndSetTransactionData();
+
+    if (searchParams.get("type")) {
+      fetchDataAndSetTransactionData();
+    }
   }, [searchParams]);
 
   return (
