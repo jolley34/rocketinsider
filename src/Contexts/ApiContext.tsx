@@ -57,7 +57,7 @@ async function getCompanyProfile(symbol: string) {
   const responseData = await response.json();
   return {
     name: responseData.name,
-    logo: responseData.logo, // Lägg till logotypen här
+    logo: responseData.logo,
   };
 }
 
