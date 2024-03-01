@@ -11,7 +11,7 @@ const Root = styled.div`
     43deg,
     #53626d 0%,
     #508ca8 46%,
-    #ffcc70 100%
+    #e5cc9d 100%
   );
 `;
 
