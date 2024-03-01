@@ -62,8 +62,8 @@ function DropDownContent() {
         </Text>
         <Text>
           Even though this is by <FontWeight>NO</FontWeight> means a financial
-          recommendation to <BigMoney>BUY</BigMoney>/<Sell>SELL</Sell>/ or trade
-          the symbol displayed.
+          recommendation to <BigMoney>BUY</BigMoney>/<Sell>SELL</Sell>/ or{" "}
+          <FontWeight>TRADE</FontWeight> the symbol displayed.
         </Text>
       </div>
       <div>
