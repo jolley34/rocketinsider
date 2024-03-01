@@ -82,6 +82,12 @@ const Symbol = styled.h1`
   font-size: 3rem;
 `;
 
+const FlexCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+`;
+
 const AmountBuyInfo = styled(Info)`
   font-size: 2rem;
   color: #8bce92;
@@ -160,8 +166,15 @@ function TransactionPage() {
                 <CompanyName>
                   {transaction.companyName || "Unknown Company Name"}
                 </CompanyName>
+                <FlexCol>
+                  <Info>{transaction.currentPrice || "Unknown"}</Info>
+                  <SubTitle>Current</SubTitle>
+                  <SubTitle>Price</SubTitle>
+                </FlexCol>
               </Flex>
-              <SubTitle>Insider Name</SubTitle>
+              <Flex>
+                <SubTitle>Insider Name</SubTitle>
+              </Flex>
               <Info>{transaction.name}</Info>
               <SubTitle>Transaction Date</SubTitle>
               <Info>{transaction.transactionDate}</Info>

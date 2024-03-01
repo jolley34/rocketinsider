@@ -21,6 +21,7 @@ interface TransactionData {
   totalAmount: number;
   companyName: string;
   logo: string;
+  currentPrice: number;
 }
 
 // En TypeScript-interface som definierar strukturen för context-värdet.
@@ -89,6 +90,16 @@ async function getCompanyProfile(symbol: string) {
   };
 }
 
+// Funktion för att hämta aktuellt pris från Finnhub's Quote API baserat på symbol.
+async function getCurrentPrice(symbol: string): Promise<number> {
+  const apiKey = config.apiKey;
+  const response = await fetch(
+    `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
+  );
+  const responseData = await response.json();
+  return responseData.c; // Returnera det aktuella priset från API-svar.
+}
+
 // Funktion för att sortera och filtrera transaktionsdata baserat på köp, försäljning eller inget specifierat.
 async function sortAndFilterData(
   transactionData: TransactionData[],
@@ -97,30 +108,28 @@ async function sortAndFilterData(
   let filteredData: TransactionData[] = [...transactionData];
 
   if (purchaseType === "sell") {
-    // Filtrera och sortera försäljningstransaktioner och returnera de tre första.
     filteredData = filteredData
       .filter((transaction) => transaction.transactionCode === "S")
       .sort((a, b) => a.totalAmount - b.totalAmount)
       .slice(0, 3);
   } else if (purchaseType === "purchase") {
-    // Filtrera och sortera köpstransaktioner och returnera de tre första.
     filteredData = filteredData
       .filter((transaction) => transaction.transactionCode === "P")
       .sort((a, b) => b.totalAmount - a.totalAmount)
       .slice(0, 3);
   } else {
-    // Om ingen typ har angetts, returnera bara de första 3 transaktionerna.
     filteredData = filteredData.slice(0, 3);
   }
 
-  // Hämta företagsnamn och logotyper för de filtrerade transaktionerna.
   const transactionsWithCompanyData = await Promise.all(
     filteredData.map(async (transaction) => {
       const companyProfile = await getCompanyProfile(transaction.symbol);
+      const currentPrice = await getCurrentPrice(transaction.symbol); // Ändring här
       return {
         ...transaction,
         companyName: companyProfile.name,
-        logo: companyProfile.logo, // Lägg till logotypen här
+        logo: companyProfile.logo,
+        currentPrice: currentPrice, // Ändring här
       };
     })
   );
