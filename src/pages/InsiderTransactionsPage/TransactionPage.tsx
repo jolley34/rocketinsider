@@ -9,6 +9,11 @@ type GridCardProps = {
 
 const GridContainer = styled.section`
   display: grid;
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  bottom: 0;
   gap: 3rem;
   padding: 0 5rem;
   grid-template-columns: repeat(3, 1fr);
