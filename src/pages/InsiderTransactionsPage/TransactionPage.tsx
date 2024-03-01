@@ -139,7 +139,7 @@ function TransactionPage() {
       const timer = setTimeout(() => {
         setAnimated(true);
         setLoading(false);
-      }, 50);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [transactionData]);
