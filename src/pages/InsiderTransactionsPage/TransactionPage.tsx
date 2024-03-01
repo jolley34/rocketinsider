@@ -67,14 +67,14 @@ const Number = styled(SubTitle)`
 
 const Info = styled.p`
   color: #c2dee9;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 900;
 `;
 
 const CompanyName = styled(Info)`
   color: #c2dee9;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.5rem;
+  font-weight: 900;
 `;
 
 const Symbol = styled.h1`
@@ -170,7 +170,9 @@ function TransactionPage() {
                   ? "Shares Sold"
                   : "Shares Bought"}
               </SubTitle>
-              <Info>{transaction.change}</Info>
+              <Info>
+                {Math.abs(transaction.change).toLocaleString("sv-SE")}{" "}
+              </Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice}</Info>
               <SubTitle>Total Amount</SubTitle>
