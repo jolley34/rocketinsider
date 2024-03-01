@@ -74,23 +74,23 @@ async function getCurrentPrice(symbol: string): Promise<number> {
 // Funktion för att slå ihop och sammanfoga transaktioner baserat på namn och transaktionskod.
 function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
   // En objektstruktur för att lagra sammanfogad data.
-  const summaryData: { [key: string]: TransactionData } = {};
+  const mergedData: { [key: string]: TransactionData } = {};
   transactions.forEach((transaction: TransactionData) => {
     const key = `${transaction.name}-${transaction.transactionCode}`;
-    if (summaryData[key]) {
+    if (mergedData[key]) {
       // Uppdatera sammanfogad data med ny information från varje transaktion.
-      summaryData[key].totalAmount += Math.round(
+      mergedData[key].totalAmount += Math.round(
         transaction.change * transaction.transactionPrice
       );
-      summaryData[key].change += transaction.change;
+      mergedData[key].change += transaction.change;
       if (
-        !summaryData[key].transactionDate.includes(transaction.transactionDate)
+        !mergedData[key].transactionDate.includes(transaction.transactionDate)
       ) {
-        summaryData[key].transactionDate += ` / ${transaction.transactionDate}`;
+        mergedData[key].transactionDate += ` / ${transaction.transactionDate}`;
       }
     } else {
       // Skapa ny post i objektet om det inte finns någon matchande nyckel.
-      summaryData[key] = {
+      mergedData[key] = {
         ...transaction,
         totalAmount: Math.round(
           transaction.change * transaction.transactionPrice
@@ -99,7 +99,7 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
     }
   });
   // Returnera en array av sammanfogade transaktioner.
-  return Object.values(summaryData);
+  return Object.values(mergedData);
 }
 
 // Funktion för att sortera och filtrera transaktionsdata baserat på köp, försäljning eller inget specifierat.
