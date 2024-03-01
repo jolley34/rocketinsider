@@ -34,6 +34,7 @@ const CardAnimation = keyframes`
 `;
 
 const GridCard = styled.div<GridCardProps>`
+  cursor: default;
   background-color: #00000079;
   mix-blend-mode: lighten;
   border-radius: 10px 10px 10px 10px;
