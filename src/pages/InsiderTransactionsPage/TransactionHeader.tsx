@@ -4,9 +4,15 @@ import styled from "styled-components";
 import Menu from "../../components/Menu";
 import NavbarTransaction from "../../components/NavbarTransaction";
 
-type subTitleProps = {
+type animationProp = {
   isVisible: boolean;
 };
+
+const Flex = styled.div`
+  display: flex;
+  align-items: last baseline;
+  gap: 2rem;
+`;
 
 const FlexBetween = styled.div`
   display: flex;
@@ -14,10 +20,18 @@ const FlexBetween = styled.div`
   justify-content: space-between;
 `;
 
-const SubTitle = styled.h1<subTitleProps>`
+const SubTitle = styled.h1<animationProp>`
   color: #c2dee9;
   font-weight: 700;
   font-size: 1.5rem;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: opacity 1.2s ease-in-out;
+`;
+
+const BetaTitle = styled.h1<animationProp>`
+  color: #9edaf3;
+  font-weight: 700;
+  font-size: 1rem;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: opacity 1.2s ease-in-out;
 `;
@@ -46,9 +60,12 @@ function TransactionHeader() {
   return (
     <Wrapper>
       <FlexBetween>
-        <Link to="/">
-          <SubTitle isVisible={isVisible}>rocketinsider.</SubTitle>
-        </Link>
+        <Flex>
+          <Link to="/">
+            <SubTitle isVisible={isVisible}>rocketinsider.</SubTitle>
+          </Link>
+          <BetaTitle isVisible={isVisible}>BETA Version 0.1</BetaTitle>
+        </Flex>
         <Menu />
       </FlexBetween>
 

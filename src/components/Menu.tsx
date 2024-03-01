@@ -31,7 +31,7 @@ const DropDown = styled.div<MenuOpen>`
   top: 0;
   left: 0;
   width: 100vw;
-  background-color: #1d1d1d;
+  background-color: #508ca8;
   overflow: hidden;
   height: ${({ isOpen }) => (isOpen ? "100vh" : "0")};
   transition: height 0.3s ease-in-out;

@@ -31,7 +31,7 @@ const SubTitle = styled.h1<TitleProps>`
 
 const Wrapper = styled.section`
   padding: 10rem;
-  background: #1d1d1d;
+  background: #508ca8;
 `;
 
 function Header() {
