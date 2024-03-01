@@ -45,7 +45,7 @@ function DropDownContent() {
   return (
     <ContentContainer>
       <div>
-        <ContentTitle>The Vision</ContentTitle>
+        <ContentTitle>Our Vision</ContentTitle>
         <Text>
           Rather than displaying excessive data, this will provide only the top
           3 largest INSIDE TRANSACTIONS from the US market the last 24 Hours.
