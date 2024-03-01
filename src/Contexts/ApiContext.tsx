@@ -120,13 +120,19 @@ function ApiProvider(props: PropsWithChildren<{}>) {
       try {
         const data = await getInsideTransactions("");
         const mergedData = mergeTransactions(data);
-        setTransactionData(mergedData);
+        const purchaseType = searchParams.get("type");
+        const filteredTransactions = await sortAndFilterData(
+          mergedData,
+          purchaseType
+        );
+        const processedData = await getDataFromFilterData(filteredTransactions);
+        setTransactionData(processedData);
       } catch (error) {
         console.error("Error fetching data", error);
       }
     }
     fetchDataAndSetTransactionData();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const purchaseType = searchParams.get("type");
