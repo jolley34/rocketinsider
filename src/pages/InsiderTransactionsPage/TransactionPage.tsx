@@ -49,7 +49,7 @@ const GridCard = styled.div<GridCardProps>`
   animation: ${({ animated }) =>
     animated &&
     css`
-      ${CardAnimation} 0.3s ease-out forwards;
+      ${CardAnimation} 1s ease-out backwards;
     `};
 `;
 
