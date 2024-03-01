@@ -98,6 +98,7 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
       };
     }
   });
+
   // Returnera en array av sammanfogade transaktioner.
   return Object.values(mergedData);
 }
