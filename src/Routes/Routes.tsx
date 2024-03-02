@@ -1,8 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-
-import Home from "../../src/Pages/HomePage/HomePage";
 import App from "../App";
 import ApiProvider from "../Contexts/ApiContext";
+import Home from "../Pages/HomePage/Home";
 import TransactionPage from "../Pages/InsiderTransactionsPage/TransactionPage";
 
 export const router = createBrowserRouter([
