@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import HomePage from "../../src/Pages/HomePage/HomePage";
+import Home from "../../src/Pages/HomePage/HomePage";
 import App from "../App";
 import ApiProvider from "../Contexts/ApiContext";
 import TransactionPage from "../Pages/InsiderTransactionsPage/TransactionPage";
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
       </ApiProvider>
     ),
     children: [
-      { path: "", element: <HomePage /> },
+      { path: "", element: <Home /> },
       {
         path: "/transactions",
         element: <TransactionPage />,

@@ -7,7 +7,7 @@ const Flex = styled.section`
   flex-direction: column;
 `;
 
-function HomePage() {
+function Home() {
   return (
     <Flex>
       <Header />
@@ -16,4 +16,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Home;
