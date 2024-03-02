@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import NavbarHome from "../../components/NavbarHome";
 import Header from "./Header";
