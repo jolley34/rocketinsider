@@ -1,7 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useNavbar } from "../Contexts/NavbarContext";
+import { useNavbar } from "../contexts/NavbarContext";
 
 type ListItemProp = {
   isSelected: boolean;

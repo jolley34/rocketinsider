@@ -1,10 +1,4 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useState,
-} from "react";
-
+import { PropsWithChildren, createContext, useContext, useState } from "react";
 interface NavbarContextType {
   selectedNavItem: string | null;
   setSelectedNavItem: (value: string | null) => void;
