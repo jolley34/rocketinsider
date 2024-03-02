@@ -206,18 +206,25 @@ function TransactionPage() {
                 {Math.abs(transaction.change).toLocaleString("sv-SE")}{" "}
               </Info>
               <SubTitle>Transaction Average Price</SubTitle>
-              <Info>{transaction.transactionPrice}</Info>
+              <Info>{transaction.transactionPrice || "Unknown"}</Info>
               <SubTitle>Price Change Since Transaction</SubTitle>
               <PriceDifference priceChange={transaction.priceDifference}>
-                {transaction.priceDifference > 0 ? "+" : ""}
-                {Math.abs(transaction.priceDifference).toFixed(2)} /{" "}
-                {transaction.priceDifference > 0 ? "+" : ""}
-                {calculatePercentageChange(
-                  transaction.priceDifference,
-                  transaction.transactionPrice
+                {transaction.transactionPrice ? (
+                  <>
+                    {transaction.priceDifference > 0 ? "+" : ""}
+                    {Math.abs(transaction.priceDifference).toFixed(2)} /{" "}
+                    {transaction.priceDifference > 0 ? "+" : ""}
+                    {calculatePercentageChange(
+                      transaction.priceDifference,
+                      transaction.transactionPrice
+                    )}
+                    %
+                  </>
+                ) : (
+                  <Info>Unknown</Info>
                 )}
-                %
               </PriceDifference>
+
               <SubTitle>Total Amount</SubTitle>
               <Flex>
                 {transaction.transactionCode === "S" ? (
