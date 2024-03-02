@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
+import App from "../app";
 import ApiProvider from "../contexts/ApiContext";
 import Home from "../pages/HomePage/Home";
 import TransactionPage from "../pages/InsiderTransactionsPage/TransactionPage";
