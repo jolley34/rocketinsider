@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { useApi } from "../../Contexts/ApiContext";
+import { useApi } from "../../contexts/ApiContext";
 import TransactionHeader from "./TransactionHeader";
 
 type GridCardProps = {

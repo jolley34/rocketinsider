@@ -1,7 +1,6 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import NavbarContextProvider from "./Contexts/NavbarContext";
+import NavbarContextProvider from "./contexts/NavbarContext";
 
 const Root = styled.div`
   width: 100vw;
