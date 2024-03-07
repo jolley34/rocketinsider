@@ -75,11 +75,6 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
       transaction.change * transaction.transactionPrice
     );
     mergedData[key].totalChange += transaction.change;
-    if (
-      !mergedData[key].transactionDate.includes(transaction.transactionDate)
-    ) {
-      mergedData[key].transactionDate += ` / ${transaction.transactionDate}`;
-    }
   });
   return Object.values(mergedData);
 }
