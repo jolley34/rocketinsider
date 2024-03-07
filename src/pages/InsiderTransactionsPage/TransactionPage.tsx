@@ -203,7 +203,7 @@ function TransactionPage() {
                   : "Shares Bought"}
               </SubTitle>
               <Info>
-                {Math.abs(transaction.change).toLocaleString("sv-SE")}{" "}
+                {Math.abs(transaction.totalChange).toLocaleString("sv-SE")}{" "}
               </Info>
               <SubTitle>Transaction Average Price</SubTitle>
               <Info>{transaction.transactionPrice || "Unknown"}</Info>

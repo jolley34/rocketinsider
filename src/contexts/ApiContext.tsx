@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   PropsWithChildren,
   useContext,
@@ -23,6 +23,7 @@ interface TransactionData {
   logo?: string;
   currentPrice?: number;
   priceDifference: number;
+  totalChange: number;
 }
 
 interface ContextValue {
@@ -65,10 +66,15 @@ function mergeTransactions(transactions: TransactionData[]): TransactionData[] {
   const mergedData: { [key: string]: TransactionData } = {};
   transactions.forEach((transaction: TransactionData) => {
     const key = `${transaction.name}-${transaction.transactionCode}`;
-    mergedData[key] = mergedData[key] || { ...transaction, totalAmount: 0 };
+    mergedData[key] = mergedData[key] || {
+      ...transaction,
+      totalAmount: 0,
+      totalChange: 0,
+    };
     mergedData[key].totalAmount += Math.round(
       transaction.change * transaction.transactionPrice
     );
+    mergedData[key].totalChange += transaction.change;
     if (
       !mergedData[key].transactionDate.includes(transaction.transactionDate)
     ) {
